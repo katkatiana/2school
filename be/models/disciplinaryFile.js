@@ -1,0 +1,30 @@
+/**
+ * @fileoverview disciplinaryFile.js
+ * Defines the mongoose schema for a disciplinary note to be stored in the database.
+ * @author Mariakatia Santangelo
+ * @date   15-04-2024
+ */
+
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const TeacherModel = require('./teacher');
+const StudentModel = require('./student');
+
+const DisciplinaryFileSchema = new Schema(
+    {
+        content: {
+            type: String,
+            required: true
+        },
+        teacherId: {
+                type: Schema.Types.ObjectId,
+                ref: TeacherModel
+        },
+        studentId: {
+            type: Schema.Types.ObjectId,
+            ref: StudentModel
+        }
+    }
+)
+
+module.exports = mongoose.model('DisciplinaryFileModel', DisciplinaryFileSchema, 'disciplinaryFile');
