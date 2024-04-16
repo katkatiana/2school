@@ -14,12 +14,28 @@ const TeacherModel = require('../models/teacher');
 
 /******** Function Section  ****************************************************/
 
+/** GET Methods */
 /**
- * Route to get all teachers.
- * Method: GET
- * @returns status code 200 if fetching of the teachers from db is successful.
- * @returns status code 500 if any other error occurs.
- * @note route is protected through verifyToken middleware and can only be accessed with a valid authentication key.
+ * @openapi
+ * '/getTeachers':
+ *  get:
+ *     tags:
+ *     - User Controller
+ *     summary: Get a user by username
+ *     parameters:
+ *      - name: username
+ *        in: path
+ *        description: The username of the user
+ *        required: true
+ *     responses:
+ *      200:
+ *        description: Fetched Successfully
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ *      500:
+ *        description: Server Error
  */
 router.get('/getTeachers', async (req, res) => {
     try {
@@ -39,14 +55,44 @@ router.get('/getTeachers', async (req, res) => {
     }
 })
 
-/**
- * Route to create a new user (signup).
- * The teacher to be created is contained in the request body.
- * Method: POST
- * @returns status code 201 if creation of the teacher is successful and, only if so, it stores the teacher in db.
- * @returns status code 409 if the teacher already exists.
- * @returns status code 500 if any other error occurs.
- */
+/** POST Methods */
+    /**
+     * @openapi
+     * '/api/user/register':
+     *  post:
+     *     tags:
+     *     - User Controller
+     *     summary: Create a user
+     *     requestBody:
+     *      required: true
+     *      content:
+     *        application/json:
+     *           schema:
+     *            type: object
+     *            required:
+     *              - username
+     *              - email
+     *              - password
+     *            properties:
+     *              username:
+     *                type: string
+     *                default: johndoe 
+     *              email:
+     *                type: string
+     *                default: johndoe@mail.com
+     *              password:
+     *                type: string
+     *                default: johnDoe20!@
+     *     responses:
+     *      201:
+     *        description: Created
+     *      409:
+     *        description: Conflict
+     *      404:
+     *        description: Not Found
+     *      500:
+     *        description: Server Error
+     */
 router.post('/createTeacher', async (req, res) => {
     
     /* db stores only the hash of the received password, and not the password itself */
