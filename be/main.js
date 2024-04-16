@@ -9,9 +9,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const TeacherModel = require('./models/teacher')
-const SubjectModel = require('./models/subject')
-const GradeModel = require('./models/grade')
+const TeacherModel = require('./models/teacher');
+const SubjectModel = require('./models/subject');
+const GradeModel = require('./models/grade');
 
 
 require('dotenv').config();
