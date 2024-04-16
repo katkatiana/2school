@@ -12,7 +12,7 @@ const cors = require('cors');
 const TeacherModel = require('./models/teacher');
 const SubjectModel = require('./models/subject');
 const GradeModel = require('./models/grade');
-
+const swaggerDocs = require('./docgen/swagger.js');
 
 require('dotenv').config();
 
@@ -55,6 +55,8 @@ const teachersRoute = require('./routes/teacher');
 app.use(express.json());
 //we need to define cors before all routes in order to have them working
 app.use(cors());
+app.disable('x-powered-by');
+
 
 app.use('/', teachersRoute);
 
@@ -71,3 +73,4 @@ db.once('open', () => {
 })
 
 app.listen(PORT, () => console.log(`Server connected and listening on port ${PORT}`))
+swaggerDocs(app, PORT);
