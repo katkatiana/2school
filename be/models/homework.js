@@ -16,18 +16,16 @@ const HomeworkSchema = new Schema(
             type: String,
             required: true
         },
-        teachers: [
+        teacherId:
             {
                 type: Schema.Types.ObjectId,
                 ref: TeacherModel
-            }
-        ],
-        subjects: [
+            },
+        subjectId:
             {
                 type: Schema.Types.ObjectId,
                 ref: SubjectModel
             }
-        ]
     }
 )
 

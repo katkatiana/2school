@@ -30,7 +30,7 @@ const StudentSchema = new Schema(
         },
         avatar: {
             type: String,
-            required: true
+            required: false
         }
     }
 )

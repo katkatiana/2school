@@ -20,13 +20,10 @@ const TeacherModel = require('../models/teacher');
  * '/getTeachers':
  *  get:
  *     tags:
- *     - User Controller
- *     summary: Get a user by username
- *     parameters:
- *      - name: username
- *        in: path
- *        description: The username of the user
- *        required: true
+ *     - Insert tag here
+ *     summary: Get all the teachers in the database
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *      200:
  *        description: Fetched Successfully

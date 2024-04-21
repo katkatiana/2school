@@ -15,7 +15,9 @@ const GradeSchema = new Schema(
     {
         value: {
             type: Number,
-            required: true
+            required: true,
+            min: 2,
+            max: 10
         },
         teacherId: {
                 type: Schema.Types.ObjectId,

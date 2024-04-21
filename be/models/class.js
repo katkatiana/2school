@@ -9,7 +9,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const TeacherModel = require('./teacher');
 const StudentModel = require('./student');
-const SubjectModel = require('./subject');
 const HomeworkModel = require('./homework');
 const DisciplinaryFileModel = require('./disciplinaryFile');
 
@@ -33,12 +32,6 @@ const ClassSchema = new Schema(
             {
                 type: Schema.Types.ObjectId,
                 ref: StudentModel
-            }
-        ],
-        subjectsId: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: SubjectModel
             }
         ],
         homeworkId: [

@@ -2,34 +2,45 @@ const swaggerJsdoc = require('swagger-jsdoc')
 const swaggerUi = require('swagger-ui-express')
 const express = require('express');
 const router = express.Router();
+require('dotenv').config();
 
-    const options = {
-      definition: {
-        openapi: '3.0.0',
-        info: {
-          title: 'Mini Blog API',
-          description: "API endpoints for a mini blog services documented on swagger",
-          contact: {
-            name: "Desmond Obisi",
-            email: "info@miniblog.com",
-            url: "https://github.com/DesmondSanctity/node-js-swagger"
-          },
-          version: '1.0.0',
-        },
-        servers: [
-          {
-            url: "http://localhost:8080/",
-            description: "Local server"
-          },
-          {
-            url: "<your live url here>",
-            description: "Live server"
-          },
-        ]
+const options = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: '2school back-end API',
+      description: "API endpoints for 2school application, made with Swagger",
+      contact: {
+        name: "Mariakatia Santangelo",
+        email: "msantangelo56@gmail.com",
+        url: "https://github.com/katkatiana"
       },
-      // looks for configuration in specified directories
-      apis: ['./routes/*.js'],
-    }
+      version: '1.0.0',
+    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          in: "header"
+        }
+      }
+    },
+    servers: [
+      {
+        url: process.env.LOCAL_SERVER_URL,
+        description: "Local Test Server"
+      },
+      {
+        url: process.env.PROD_SERVER_URL,
+        description: "Live server"
+      },
+    ]
+  },
+  // looks for configuration in specified directories
+  apis: ['./routes/*.js'],
+}
  
 const swaggerSpec = swaggerJsdoc(options)
 
