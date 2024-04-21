@@ -28,7 +28,9 @@ const PORT = 3030;
 const app = express();
 
 /******** Import ROUTES Section  *******************************************************/
+const loginRoute = require('./routes/login');
 const teachersRoute = require('./routes/teacher');
+
 
 /******** TEST Section  *******************************************************/
 const testTeacher = async () => {
@@ -190,7 +192,7 @@ app.use(express.json());
 app.use(cors());
 app.disable('x-powered-by');
 
-
+app.use('/', loginRoute);
 app.use('/', teachersRoute);
 
 
