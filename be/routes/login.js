@@ -1,6 +1,6 @@
 /**
  * @fileoverview login.js
- * This route contains all routing methods related to teachers.
+ * This route contains all routing methods that allow user login.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */

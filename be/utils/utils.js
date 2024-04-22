@@ -5,6 +5,8 @@
  * @date   15-04-2024
  */
 
+/******** Functions Section  *******************************************************/
+
 const sendResponse = (res, statusCode, message, payloadName, payload) => {
     let responseContent = {
         statusCode: statusCode,
@@ -18,6 +20,7 @@ const sendResponse = (res, statusCode, message, payloadName, payload) => {
         .send(responseContent)
 }
 
+/******** Export Section  *******************************************************/
 
 module.exports = {
     sendResponse: sendResponse,
