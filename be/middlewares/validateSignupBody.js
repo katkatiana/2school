@@ -45,7 +45,9 @@ const validateSignupBody = (req, res, next) => {
         if(!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/).test(email)) {
             errors.push('Email is not valid.')
         }
-        if(typeof userCategory !== 'number' /* || userCategory !== info.TEACHER_CATEGORY_ID || userCategory !== info.STUDENT_CATEGORY_ID  */) {
+        console.log(typeof(userCategory))
+        console.log(userCategory)
+        if(typeof userCategory !== 'number' || (userCategory !== info.TEACHER_CATEGORY_ID && userCategory !== info.STUDENT_CATEGORY_ID)) {
                 errors.push('UserCategory is not valid.')
         }
     }    

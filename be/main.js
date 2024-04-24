@@ -29,8 +29,12 @@ const teachersRoute = require('./routes/teacher');
 /******** Middleware Section  *******************************************************/
 
 app.use(express.json());
+//this corsOptions make header authorization visible. This way it can be taken and set as auth key in fe.
+const corsOptions = {
+    exposedHeaders: 'Authorization',
+};
 //we need to define cors before all routes in order to have them working
-app.use(cors());
+app.use(cors(corsOptions));
 app.disable('x-powered-by');
 
 app.use('/', loginRoute);

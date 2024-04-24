@@ -20,7 +20,7 @@ const TeacherModel = require('../models/teacher');
  * '/getTeachers':
  *  get:
  *     tags:
- *     - Insert tag here
+ *     - Get Teacher
  *     summary: Get all the teachers in the database
  *     security:
  *      - bearerAuth: []

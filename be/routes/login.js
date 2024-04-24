@@ -24,7 +24,7 @@ const validateLoginBody = require('../middlewares/validateLoginBody');
  * '/login':
  *  post:
  *     tags:
- *     - User login
+ *     - User Login
  *     summary: Performs login of the given user
  *     requestBody:
  *      required: true

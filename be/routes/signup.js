@@ -45,6 +45,46 @@ let mailGenerator = new Mailgen({
 
 
 /******** Function Section  ****************************************************/
+/** POST Methods */
+/**
+ * @openapi
+ * '/signup':
+ *  post:
+ *     tags:
+ *     - User Signup
+ *     summary: Performs signup of the given user
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *           schema:
+ *            type: object
+ *            required:
+ *              - first name
+ *              - last name
+ *              - email
+ *              - password
+ *            properties:
+ *              first name:
+ *                type: string
+ *                default: John
+ *              last name:
+ *                type: string
+ *                default: Doe
+ *              email:
+ *                type: string
+ *                default: johndoe@scuola.edu.it
+ *              password:
+ *                type: string
+ *                default: johnDoe20
+ *     responses:
+ *      201:
+ *        description: User successfully created
+ *      409:
+ *        description: User already exists
+ *      500:
+ *        description: Internal Server Error
+ */
 router.post('/signup', validateSignupBody, async (req, res) => {
 
     /* db stores only the hash of the received password, and not the password itself */

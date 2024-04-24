@@ -34,18 +34,17 @@ const validateLoginBody = (req, res, next) => {
         errors.push("Email or password not present.")
     } else {
         if(!(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/).test(email)) {
-            errors.push('Email is not valid.')
+            errors.push('Email is not in a correct format.')
         }
         
-        if(typeof password !== 'string' || password.length < 8) {
-            errors.push('Password is not valid.')
+        if(typeof password !== 'string') {
+            errors.push('Password is not in a correct format.')
         }
     }
    
     
-    
     if(errors.length > 0) {
-        tools.sendResponse(res, 400, "Login body validation failed. See errors param.", "errors", errors)
+        tools.sendResponse(res, 400, "Provided infos are not correct.", "errors", errors)
     } else {
         next()
     }
