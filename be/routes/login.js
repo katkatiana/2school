@@ -45,6 +45,8 @@ const validateLoginBody = require('../middlewares/validateLoginBody');
  *     responses:
  *      200:
  *        description: Login successful
+ *      400:
+ *         description: Email and/or password are missing and/or are not in the correct format.
  *      401:
  *        description: Email or password does not match
  *      404:

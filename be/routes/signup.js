@@ -80,6 +80,8 @@ let mailGenerator = new Mailgen({
  *     responses:
  *      201:
  *        description: User successfully created
+ *      400:
+ *        description: Email and/or password are missing and/or are not in the correct format.
  *      409:
  *        description: User already exists
  *      500:
