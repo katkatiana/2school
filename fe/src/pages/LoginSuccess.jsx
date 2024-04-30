@@ -8,43 +8,41 @@
 
 /******** Import Section  *******************************************************/
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+/******** Constants Section  *******************************************************/
+
+/**
+ * Maximum waiting time before redirection.
+ */
+const MAX_WAITING_S = 3
 
 /******** Component Definition  *************************************************/
 
 /**
  * LoginSuccess
- * This component renders a message of successful login in case of 
- * detected token key.
+ * This component implements a waiting mechanisms before redirecting to homepage.
  * @returns a div with the above mentioned message.
  */
 const LoginSuccess = () => {
 
   /******** Internal Variables  ***************************************************/
 
-  const params  = new URLSearchParams(window.location.search);
-  const token = params.get('token');
   const navigate = useNavigate();
-
-  /** Only at the initial render the token key will be searched in local storage.
-   * if found, the user will be redirected to homepage, else it will stay in the login page.
-   */
+  const [seconds, setSeconds] = useState(MAX_WAITING_S);
 
   useEffect(() => {
-
-    if(token) {
-      localStorage.setItem('auth', JSON.stringify(token))
+    if (seconds > 0) {
+      setTimeout(() => setSeconds(seconds - 1), 1000);
     } else {
-      alert('Login failed. Please, try again.')
-      navigate('/login')
+      setSeconds(0);
+      navigate("/homepage")
     }
-  }, [])
-  
+  }, [seconds])  
 
   return (
-    <div>You are being redirected...</div>
+    <div>You will be redirected in {seconds} seconds..</div>
   )
 }
 

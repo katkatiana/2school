@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const executeNetworkOperation = async (inputMethod, inputUrl, inputData, inputHeaders) => {
     let outputRes;
     await axios(
         {
-            method: inputMethod,
+            method: inputMethod.toLowerCase(),
             url: process.env.REACT_APP_FRONTEND_SERVER_URL + inputUrl,
             data: inputData,
             headers: inputHeaders
@@ -23,6 +24,45 @@ const executeNetworkOperation = async (inputMethod, inputUrl, inputData, inputHe
 
     return outputRes;
 
-}       
+}
 
-export default executeNetworkOperation;
+
+const getAuthUserFromToken = () => {
+
+    let token = localStorage.getItem('auth');
+    let decodedUser;
+    if(!token){
+        token = undefined;
+        decodedUser = undefined;
+    } else {
+        decodedUser = jwtDecode(token);
+        console.log(decodedUser)
+    }
+
+    return {
+        token: token,
+        decodedUser: decodedUser
+    }
+}
+
+const buildAuthHeader = (token) => {
+    return {"Authorization" : "Bearer " + token}
+}
+
+const saveAuthToken = (token) => {
+    localStorage.setItem('auth', JSON.stringify(token))
+}
+
+const resetAuthToken = () => {
+    if(localStorage.getItem('auth')){
+        localStorage.removeItem('auth');
+    }    
+}
+
+export {
+    executeNetworkOperation,
+    getAuthUserFromToken,
+    buildAuthHeader,
+    saveAuthToken,
+    resetAuthToken
+}

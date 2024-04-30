@@ -9,7 +9,7 @@
 /******** Import Section  *******************************************************/
 
 import React, { useState } from 'react';
-import executeNetworkOperation from '../../utils/utils'
+import { executeNetworkOperation } from '../../utils/utils';
 import './SignupForm.css';
 import Navbar from '../Navbar/Navbar'
 
@@ -19,7 +19,7 @@ import Navbar from '../Navbar/Navbar'
  * SignupForm
  * This component renders the text areas that can be used to input
  * a new signup with already existing users. 
- * @returns Instantiation of the elements that contain the login form.
+ * @returns Instantiation of the elements that contain the sign up form.
  */
 const SignupForm = () => {
 
@@ -121,7 +121,7 @@ const checkInput = () => {
                 });
             alert(finalErrorMessage)
         } else {
-            alert(outputRes.message)
+            alert(outputRes.data.message)
         }    
     }       
 } 

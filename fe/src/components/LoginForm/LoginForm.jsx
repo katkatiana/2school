@@ -12,6 +12,10 @@ import React, { useState } from 'react';
 import Navbar from '../Navbar/Navbar';
 import axios from 'axios';
 import './LoginForm.css';
+import { executeNetworkOperation, saveAuthToken } from '../../utils/utils';
+import { useNavigate } from 'react-router-dom';
+
+
 
 /******** Component Definition  *************************************************/
 
@@ -25,6 +29,7 @@ import './LoginForm.css';
 
 const LoginForm = () => {
 
+    const navigate = useNavigate();
     const [isError, setIsError] = useState(false);
     const [loginForm, setLoginForm] = useState( 
             {
@@ -45,41 +50,32 @@ const LoginForm = () => {
             ...loginForm,
             [name] : value 
         })
-        console.log(loginForm)
-        
-
     }
 
     const handleOnSubmit = async (ev) => {
         ev.preventDefault()
-        console.log(process.env.REACT_APP_FRONTEND_SERVER_URL)
-
-        await axios
-        .post(
-            process.env.REACT_APP_FRONTEND_SERVER_URL + '/login',
+        
+        let outputRes = await executeNetworkOperation(
+            'post',
+            '/login',
             loginForm
-        )
-        .then((res) => {
-            //all 2xx status codes end in here.
-            console.log(res);
-            if(res.status === 200) {
-                alert('Login successful')
-                localStorage.setItem('auth', JSON.stringify(res.headers.getAuthorization()))
-            } 
-        })
-        .catch((err) => {
-            //all 4xx and 5xx status codes end in here.
-            console.log("error", err)
-            if(err.response.data.statusCode === 400){
-                let finalErrorMessage = err.response.data.message + "\n";
-                err.response.data.errors.map((errorMsg) => {
+        );
+        
+        if(outputRes.data.statusCode === 200){
+            alert(outputRes.data.message)
+            saveAuthToken(outputRes.headers.getAuthorization())
+            navigate("/success")
+        } else {
+            if(outputRes.data.errors){
+                let finalErrorMessage = outputRes.data.message + "\n";
+                outputRes.data.errors.map((errorMsg) => {
                     finalErrorMessage += errorMsg;
                 })
-                alert(finalErrorMessage)
+                alert(finalErrorMessage)                       
             } else {
-                alert(err.response.data.message)
+                alert(outputRes.data.message)
             }
-        })
+        }
     }
 
     return(

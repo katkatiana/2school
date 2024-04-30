@@ -10,6 +10,7 @@
 import React from 'react';
 import LoginForm from '../components/LoginForm/LoginForm';
 import { useEffect } from 'react';
+import { resetAuthToken } from '../utils/utils';
 
 /******** Component Definition  *************************************************/
 
@@ -20,14 +21,13 @@ import { useEffect } from 'react';
  */
 const LoginPage = () => {
 
+    
     /**
      * At the opening of the page, if any token key is detected it is instantly removed
      * from local storage.
      */
     useEffect( () => {
-        if(localStorage.getItem("auth")){
-            localStorage.removeItem('auth');
-        }        
+        resetAuthToken();        
     }, [])
 
     return (

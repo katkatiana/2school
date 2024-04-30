@@ -9,9 +9,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from './pages/LoginPage.jsx';
 import NotFound from './pages/NotFound.jsx';
+import Unauthorized from './pages/Unauthorized.jsx'
 import LoginSuccess from './pages/LoginSuccess.jsx';
 import SignupForm from "./components/SignupForm/SignupForm.jsx";
-
+import UserInfo from "./components/UserInfo/UserInfo.jsx";
+import ProtectedRoutes from "./middleware/ProtectedRoutes.js";
+import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID, ADMIN_CATEGORY_ID } from "./utils/info.js";
 
 /**
  * App
@@ -29,10 +32,16 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route  exact path = '/login' element = {<LoginPage /> } />
-          <Route  path = '/success' element = {<LoginSuccess /> } />
-          <Route  path = '/signup' element = {<SignupForm /> } />
+          <Route exact path = '/login' element = {<LoginPage /> } />
           <Route path = '*' element = {<NotFound />} /> 
+          <Route path = '/unauthorized' element = {<Unauthorized /> } />
+          <Route element = { <ProtectedRoutes allowedRoles={[TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID]}/>} >
+            <Route path = '/success' element = {<LoginSuccess /> } />
+            <Route path = '/userDetail' element = {<UserInfo /> } />
+          </Route>
+          <Route element = { <ProtectedRoutes allowedRoles={[ADMIN_CATEGORY_ID]}/>} >
+            <Route path = '/signup' element = {<SignupForm /> } />
+          </Route>          
         </Routes>
       </BrowserRouter>
     </div>

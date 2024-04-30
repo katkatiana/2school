@@ -15,7 +15,7 @@ const Mailgen = require('mailgen');
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
 const tools = require('../utils/utils');
-const validateSignupBody = require('../middlewares/validateSignupBody');
+const validateSignupBody = require('../middleware/validateSignupBody');
 const avatars = require('../utils/avatars');
 const info = require('../utils/info');
 

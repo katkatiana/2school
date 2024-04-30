@@ -14,8 +14,8 @@ const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
 const jwt = require('jsonwebtoken');
 const tools = require('../utils/utils');
-const validateLoginBody = require('../middlewares/validateLoginBody');
-
+const validateLoginBody = require('../middleware/validateLoginBody');
+const info = require('../utils/info');
 
 /******** Function Section  ****************************************************/
 /** POST Methods */
@@ -60,6 +60,7 @@ router.post('/login', validateLoginBody, async (req, res) => {
     const loginPassword = req.body.password;
 
     try{
+        let userCategory;
         const userTeacher = await TeacherModel.findOne(
             {
                 email: loginEmail
@@ -73,8 +74,10 @@ router.post('/login', validateLoginBody, async (req, res) => {
 
         if(userTeacher) {
             user = userTeacher;
+            userCategory = info.TEACHER_CATEGORY_ID;
         } else if (userStudent) {
             user = userStudent;
+            userCategory = info.STUDENT_CATEGORY_ID;
         } else {
             user = undefined;
         }
@@ -97,12 +100,13 @@ router.post('/login', validateLoginBody, async (req, res) => {
                         firstName: user.firstName,
                         lastName: user.lastName,
                         email: user.email,
-                        avatar: user.avatar
+                        avatar: user.avatar,
+                        userRole: userCategory
                     }, process.env.SECRET_KEY, {
                         expiresIn: '20s'
                     }
                 )
-                res.header('Authorization', "Bearer " + token)
+                res.header('Authorization', token)
                 tools.sendResponse(res, 200, "Login successful.")
             }
         }

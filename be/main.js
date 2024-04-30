@@ -24,6 +24,7 @@ const app = express();
 const loginRoute = require('./routes/login');
 const signupRoute = require('./routes/signup');
 const teachersRoute = require('./routes/teacher');
+const userRoute = require('./routes/user');
 
 
 /******** Middleware Section  *******************************************************/
@@ -40,6 +41,7 @@ app.disable('x-powered-by');
 app.use('/', loginRoute);
 app.use('/', signupRoute);
 app.use('/', teachersRoute);
+app.use('/', userRoute);
 
 
 /** Connection to mongoose */
