@@ -13,7 +13,6 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import './UserInfo.css';
 import Navbar from '../Navbar/Navbar'
-import axios from 'axios';
 import * as icons from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,6 +30,8 @@ const UserInfo = () => {
     const navigate = useNavigate();
     const [show, setShow] = useState(false);
     const [selectedUrl, setSelectedUrl] = useState("");
+    const [isClicked, setIsClicked] = useState(false);
+    const [newPassword, setNewPassword] = useState("");
     const [currentUser, setCurrentUser] = useState({
         firstName : "",
         lastName : "",
@@ -53,6 +54,12 @@ const UserInfo = () => {
                             "https://res.cloudinary.com/dw4mygxon/image/upload/v1714381219/2school/user_avatar/avatar_female_colour_2_rggkim.png"
                         ];
 
+    /**
+     * This function allows to save the selected avatar image for later use in patch request 
+     * and adds a border to the selected image.
+     * @param {*} e event fired by on click
+     * @param {*} index position of the selected image in the PROPIC_ARRAY
+     */
     const handleSelectedPropic = (e, index) => {
 
         if(!selectedItem) {
@@ -66,6 +73,11 @@ const UserInfo = () => {
         setSelectedUrl(PROPIC_ARRAY[index])
     }
 
+    /**
+     * This function handles the network patch to modify the user avatar. To do that token validity is checked,
+     * and if okay, it is added to the request. If the request is successful, the updated user object is returned
+     * along with a new generated token (needed since the token also included the user avatar).
+     */
     const handleModifiedPropic = async () => {
 
         let { token, decodedUser } = getAuthUserFromToken();
@@ -104,7 +116,64 @@ const UserInfo = () => {
         }        
     }
 
+    /**
+     * This function toggles status isClicked in order to show or hide 
+     * the input field to change current password.
+     */
+    const handleChangePassword = () => {
+        setIsClicked(!isClicked)
+    }
 
+    /**
+     * This function saves the content of the new password input field 
+     * for later use in patch request.
+     * @param {*} ev event fired by on change
+     */
+    const handleInputPswdChange = (ev) => {
+        setNewPassword(ev.target.value);
+    }
+
+    /**
+     * This function handles the network patch to modify the user password. To do that token 
+     * validity is checked, and if okay, it is added to the request. If a new password is added 
+     * and the request is successful, the password field is emptied.
+     */
+    const handleSaveNewPassword = async () => {
+
+        let { token, decodedUser } = getAuthUserFromToken();
+        
+        if(!token){
+            alert("Cannot retrieve user information. Please login again.")
+            navigate("/login");
+        } else {
+            let tokenUserId = decodedUser.userId;
+            const payload = {
+                "password" : newPassword
+            };
+
+            if(newPassword !== "") {
+                let outputRes = 
+                await executeNetworkOperation(
+                    "patch",
+                    `/modifyUser/${tokenUserId}`,
+                    payload,
+                    buildAuthHeader(token)
+                )
+
+                alert(outputRes.data.message);
+                handleChangePassword()
+                setNewPassword("")
+            } else {
+                alert("New password cannot be empty.")
+            }
+           
+        }
+    }
+
+    /**
+     * This function handles the get request to get all user information. To do that token 
+     * validity is checked, and if okay and the request is successful, the updated user object is returned.
+     */
     const getUserInfo = async () => {        
         
         let { token, decodedUser } = getAuthUserFromToken();
@@ -132,10 +201,15 @@ const UserInfo = () => {
                 })
             } else {
                 alert(outputRes.data.message)
+                if(outputRes.data.statusCode === 401){
+                    navigate("/login");
+                }
             }            
         }        
     }
-
+    /**
+     * Needed to trigger getUserInfo function at the first rendering of the user info page.
+     */
     useEffect(() => {
         getUserInfo();
     }, []);
@@ -167,15 +241,47 @@ const UserInfo = () => {
                     </div>
                 </div>
                 <div className = 'button-pswd'>
-                    <button type = 'button'>Change password</button>
+                    <button 
+                        type = 'button'
+                        onClick = {handleChangePassword}
+                    >
+                        {
+                            isClicked ? "Close" : "Change password"
+                        }
+                    </button>
                 </div>
+                {
+                        isClicked ?    
+                            <div>
+                                <input 
+                                    type = 'password' 
+                                    placeholder = 'Insert your new password'
+                                    onChange = {handleInputPswdChange}
+                                >
+                                    </input> 
+                                    <button 
+                                        type = 'submit'
+                                        onClick = {handleSaveNewPassword}
+                                    >
+                                        Save changes
+                                    </button>
+                                </div>
+                        : ""
+                    }
                 <div id = 'modal-launch'>
-                    <button variant="primary" onClick={handleShow} className = ''>
+                    <button 
+                        variant="primary" 
+                        onClick={handleShow} 
+                        className = ''
+                    >
                         <icons.PencilSquare />
                     </button>
                 </div>
 
-                    <Modal show={show} onHide={handleClose}>
+                    <Modal 
+                        show={show} 
+                        onHide={handleClose}
+                    >
                         <Modal.Header closeButton>
                         <Modal.Title>Avatars</Modal.Title>
                         </Modal.Header>
@@ -195,10 +301,16 @@ const UserInfo = () => {
                           
                         </Modal.Body>
                         <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
+                        <Button 
+                            variant="secondary" 
+                            onClick={handleClose}
+                        >
                             Close
                         </Button>
-                        <Button variant="primary" onClick={handleModifiedPropic}>
+                        <Button 
+                            variant="primary" 
+                            onClick={handleModifiedPropic}
+                        >
                             Save Changes
                         </Button>
                         </Modal.Footer>

@@ -54,8 +54,7 @@ const findUserCategory = async (userId) => {
             userCategory = info.UNKNOWN_CATEGORY_ID;
         }
     }
-    console.log(user)
-    console.log(userCategory)
+
     return { 
         user: user,
         userCategory: userCategory

@@ -36,7 +36,6 @@ const getAuthUserFromToken = () => {
         decodedUser = undefined;
     } else {
         decodedUser = jwtDecode(token);
-        console.log(decodedUser)
     }
 
     return {
@@ -50,7 +49,7 @@ const buildAuthHeader = (token) => {
 }
 
 const saveAuthToken = (token) => {
-    localStorage.setItem('auth', JSON.stringify(token))
+    localStorage.setItem('auth', token)
 }
 
 const resetAuthToken = () => {

@@ -18,6 +18,8 @@ const tools = require('../utils/utils');
 const validateSignupBody = require('../middleware/validateSignupBody');
 const avatars = require('../utils/avatars');
 const info = require('../utils/info');
+const verifyToken = require('../middleware/verifyToken');
+
 
 
 /******** Variables Section  *******************************************************/
@@ -87,7 +89,7 @@ let mailGenerator = new Mailgen({
  *      500:
  *        description: Internal Server Error
  */
-router.post('/signup', validateSignupBody, async (req, res) => {
+router.post('/signup', verifyToken, validateSignupBody, async (req, res) => {
 
     /* db stores only the hash of the received password, and not the password itself */
     const saltRounds = 10;

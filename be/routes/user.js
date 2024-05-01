@@ -16,6 +16,7 @@ const tools = require('../utils/utils');
 const info = require('../utils/info');
 const { findOneAndUpdate } = require('../models/subject');
 const jwt = require('jsonwebtoken');
+const verifyToken = require('../middleware/verifyToken');
 
 
 
@@ -24,11 +25,18 @@ const jwt = require('jsonwebtoken');
 /** GET Methods */
 /**
  * @openapi
- * '/getUser':
+ * '/getUser/{userId}':
  *  get:
  *     tags:
- *     - Get User
- *     summary: Get all the teachers in the database
+ *     - Get User Information
+ *     summary: Get user information from the given user ID
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *         type: string
+ *         required: true
+ *         description: Alphanumeric ID of the user to get
  *     security:
  *      - bearerAuth: []
  *     responses:
@@ -37,9 +45,9 @@ const jwt = require('jsonwebtoken');
  *      500:
  *        description: Server Error
  */
-router.get('/getUser/:id', async (req, res) => {
+router.get('/getUser/:id', verifyToken, async (req, res) => {
     const { id } = req.params;
-    console.log(id)
+    
     try {
         let {user, userCategory } = await tools.findUserCategory(id);
 
@@ -62,7 +70,58 @@ router.get('/getUser/:id', async (req, res) => {
     }
 });
 
-router.patch('/modifyUser/:id', async (req, res) => {
+/** PATCH Methods */
+/**
+ * @openapi
+ * '/modifyUser/{userId}':
+ *  patch:
+ *     tags:
+ *     - Modify User avatar or password
+ *     summary: Modify user avatar or password 
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         schema:
+ *         type: string
+ *         required: true
+ *         description: Alphanumeric ID of the user to modify
+ *     requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            oneOf:
+ *              - "$ref": '#/components/schemas/Avatar'
+ *              - "$ref": '#/components/schemas/Password'
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *      200:
+ *        description: Updated successfully
+ *      500:
+ *        description: Server Error
+ * 
+ * components:
+ *   schemas:
+ *     Avatar:
+ *       type: object
+ *       properties: 
+ *         avatar: 
+ *           type: string
+ *           default: https://your-url.com
+ *       required:
+ *         - avatar
+ *     Password:
+ *       type: object
+ *       properties: 
+ *         password: 
+ *           type: string
+ *           default: your-new-password
+ *       required:
+ *         - password
+ *                 
+ */
+router.patch('/modifyUser/:id', verifyToken, async (req, res) => {
 
     const { id } = req.params;
 
