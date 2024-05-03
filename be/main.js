@@ -26,6 +26,7 @@ const signupRoute = require('./routes/signup');
 const teachersRoute = require('./routes/teacher');
 const userRoute = require('./routes/user');
 const classRoute = require('./routes/class');
+const homeworkRoute = require('./routes/homework');
 
 
 /******** Middleware Section  *******************************************************/
@@ -44,6 +45,7 @@ app.use('/', signupRoute);
 app.use('/', teachersRoute);
 app.use('/', userRoute);
 app.use('/', classRoute);
+app.use('/', homeworkRoute);
 
 
 /** Connection to mongoose */

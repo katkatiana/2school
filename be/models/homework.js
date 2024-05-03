@@ -25,7 +25,10 @@ const HomeworkSchema = new Schema(
             {
                 type: Schema.Types.ObjectId,
                 ref: SubjectModel
-            }
+            },
+        attachment : {
+            type: String
+        }
     }
 )
 

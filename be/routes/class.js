@@ -25,8 +25,7 @@ const info = require('../utils/info');
  *  get:
  *     tags:
  *     - Get Teacher classrooms IDs
- *     summary: Retrieve all the classroom IDs of the classes that are 
- *     associated to a given teacher, specified by teacherId.
+ *     summary: Retrieve all the classroom IDs of the classes that are associated to a given teacher, specified by teacherId.
  *     parameters:
  *       - in: path
  *         name: teacherId
@@ -88,8 +87,7 @@ router.get('/getClasses/:teacherId', verifyToken, async (req, res) => {
  *  get:
  *     tags:
  *     - Get details of a given classroom
- *     summary: Retrieve all the details of a classroom with the given classID.
- *     You can view the classroom details only if you are part of it (either as a student or as a teacher).
+ *     summary: Retrieve all the details of a classroom with the given classID. You can view the classroom details only if you are part of it (either as a student or as a teacher).
  *     parameters:
  *       - in: path
  *         name: classId

@@ -23,7 +23,6 @@ const tools = require('../utils/utils');
  */
 const validateLoginBody = (req, res, next) => {
     const errors = [];
-
     const {
         email,
         password

@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const tools = require('../utils/utils');
 const info = require('../utils/info');
 
+
 /********************************** Function section *************************************************/
 let permissionTable = {};
  
@@ -18,7 +19,9 @@ permissionTable[info.TEACHER_CATEGORY_ID] = {
     'getUser'    : true,
     'modifyUser' : true,
     'getClasses' : true,
-    'getClass'   : true
+    'getClass'   : true,
+    'getSubjects': true,
+    'addHomeworkToClass' : true
 };
 
 permissionTable[info.STUDENT_CATEGORY_ID] = {
