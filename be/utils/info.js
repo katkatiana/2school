@@ -13,6 +13,7 @@ const TEACHER_CATEGORY_ID = 345;
 const STUDENT_CATEGORY_ID = 589;
 const UNKNOWN_CATEGORY_ID = 0;
 const ADMIN_CATEGORY_ID = 118;
+const TOKEN_EXPIRATION_PERIOD = '1h'
 
 
 /******** Export Section  *******************************************************/
@@ -23,5 +24,6 @@ module.exports = {
     TEACHER_CATEGORY_ID,
     STUDENT_CATEGORY_ID,
     UNKNOWN_CATEGORY_ID,
-    ADMIN_CATEGORY_ID
+    ADMIN_CATEGORY_ID,
+    TOKEN_EXPIRATION_PERIOD
 }

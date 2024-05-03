@@ -1,0 +1,16 @@
+.container{
+    display: flex;
+    width: 100%;
+}
+
+.column-center {
+    flex-grow: 1;
+    width: 80%;
+    margin-inline: 3%;
+}
+
+.column-left,
+.column-right{
+    flex: 0 0 auto;
+    max-width: 25%;
+}

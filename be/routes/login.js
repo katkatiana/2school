@@ -101,9 +101,9 @@ router.post('/login', validateLoginBody, async (req, res) => {
                         lastName: user.lastName,
                         email: user.email,
                         avatar: user.avatar,
-                        userRole: userCategory
+                        userCategory: userCategory
                     }, process.env.SECRET_KEY, {
-                        expiresIn: '20s'
+                        expiresIn: info.TOKEN_EXPIRATION_PERIOD
                     }
                 )
                 res.header('Authorization', token)

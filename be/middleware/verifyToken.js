@@ -16,19 +16,25 @@ let permissionTable = {};
 permissionTable[info.TEACHER_CATEGORY_ID] = {
     'signup'     : false,
     'getUser'    : true,
-    'modifyUser' : true
+    'modifyUser' : true,
+    'getClasses' : true,
+    'getClass'   : true
 };
 
 permissionTable[info.STUDENT_CATEGORY_ID] = {
     'signup'     : false,
     'getUser'    : true,
-    'modifyUser' : true
+    'modifyUser' : true,
+    'getClasses' : true,
+    'getClass'   : true
 };
 
 permissionTable[info.ADMIN_CATEGORY_ID] = {
     'signup'     : false,
     'getUser'    : true,
-    'modifyUser' : true
+    'modifyUser' : true,
+    'getClasses' : true,
+    'getClass'   : true
 };
 
 const verifyToken = async (req, res, next) => {
@@ -42,28 +48,35 @@ const verifyToken = async (req, res, next) => {
             let token = tokenHeader.split(" ")[1];
             let decodedToken = jwt.decode(token);
 
-            if(decodedToken.userId) {
-                const {user, userCategory} = await tools.findUserCategory(decodedToken.userId);
-                if(user){
-                    //id contained in token corresponds to an existing user id. Now check user category
-                    if(decodedToken.userRole === userCategory) {
-                        //userCategory matches. Now check permissions
-                        const destinationRoute = req.originalUrl.split("/", 2)[1]
-                        const permission = permissionTable[userCategory.toString()][destinationRoute];
-                        if(permission) {
-                            console.log("Permission granted for route " + destinationRoute + " for user " + user._id);
-                            next()
+            if(Math.floor(new Date().getTime()/1000) >= decodedToken.exp){
+                console.log(Date.now())
+                throw new Error ('Access token is expired. Please login again.')
+            } else {
+                if(decodedToken.userId) {
+                    const {user, userCategory} = await tools.findUserCategory(decodedToken.userId);
+                    if(user){
+                        //id contained in token corresponds to an existing user id. Now check user category
+                        if(decodedToken.userCategory === userCategory) {
+                            //userCategory matches. Now check permissions
+                            const destinationRoute = req.originalUrl.split("/", 2)[1]
+                            const permission = permissionTable[userCategory.toString()][destinationRoute];
+                            if(permission) {
+                                console.log("[verifyToken] Permission granted to route " + destinationRoute + " for user " + user._id);
+                                req.authUserObjFromToken = decodedToken;
+                                req.authUserObjFromDb = user;
+                                next()
+                            } else {
+                                throw new Error ('Unauthorized.')
+                            }
                         } else {
-                            throw new Error ('Unauthorized.')
+                            throw new Error ('User category is not valid.')
                         }
                     } else {
-                        throw new Error ('User category is not valid.')
+                        throw new Error ('User not found. Please login again.')
                     }
                 } else {
-                    throw new Error ('User not found')
+                    throw new Error ('Unauthorized')
                 }
-            } else {
-                throw new Error ('Unauthorized')
             }
         }
     } catch(e){

@@ -10,6 +10,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Spin } from 'antd';
 
 /******** Constants Section  *******************************************************/
 
@@ -42,7 +43,10 @@ const LoginSuccess = () => {
   }, [seconds])  
 
   return (
-    <div>You will be redirected in {seconds} seconds..</div>
+    <div style={{textAlign : 'center', marginTop : 30}}>
+      <Spin size="large" tip="Loading.."/>
+      <p>You will be redirected in {seconds} seconds..</p>
+    </div>
   )
 }
 

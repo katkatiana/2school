@@ -11,153 +11,22 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 const TeacherModel = require('../models/teacher');
+const verifyToken = require('../middleware/verifyToken');
+const tools = require('../utils/utils');
 
 /******** Function Section  ****************************************************/
 
-/** GET Methods */
-/**
- * @openapi
- * '/getTeachers':
- *  get:
- *     tags:
- *     - Get Teacher
- *     summary: Get all the teachers in the database
- *     security:
- *      - bearerAuth: []
- *     responses:
- *      200:
- *        description: Fetched Successfully
- *      400:
- *        description: Bad Request
- *      404:
- *        description: Not Found
- *      500:
- *        description: Server Error
- */
-router.get('/getTeachers', async (req, res) => {
-    try {
-        const teachers = await TeacherModel.find();
-        res
-            .status(200)
-            .send(teachers)
-    } catch (e){
-        res
-            .status(500)
-            .send(
-                {
-                    statusCode: 500,
-                    message: 'Internal Server Error'
-                }
-            )
+router.get('/getSubjects/:teacherId', verifyToken, async (req, res) => {
+    const { teacherId } = req.params;
+
+    const teacherObj = await TeacherModel.findOne({_id: teacherId}).populate('subjectsId').exec()
+    if(!teacherObj){
+        tools.sendResponse(res, 404, "Specified teacher was not found.")
+    } else {
+        console.log(teacherObj)
+        tools.sendResponse(res, 200, "Success", "payload", teacherObj.subjectsId);
     }
-})
-
-/** POST Methods */
-    /**
-     * @openapi
-     * '/api/user/register':
-     *  post:
-     *     tags:
-     *     - User Controller
-     *     summary: Create a user
-     *     requestBody:
-     *      required: true
-     *      content:
-     *        application/json:
-     *           schema:
-     *            type: object
-     *            required:
-     *              - username
-     *              - email
-     *              - password
-     *            properties:
-     *              username:
-     *                type: string
-     *                default: johndoe 
-     *              email:
-     *                type: string
-     *                default: johndoe@mail.com
-     *              password:
-     *                type: string
-     *                default: johnDoe20!@
-     *     responses:
-     *      201:
-     *        description: Created
-     *      409:
-     *        description: Conflict
-     *      404:
-     *        description: Not Found
-     *      500:
-     *        description: Server Error
-     */
-router.post('/createTeacher', async (req, res) => {
-    
-    /* db stores only the hash of the received password, and not the password itself */
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    const teacherName = req.body.firstName + " " + req.body.lastName;
-    const teacherEmail = req.body.email;
-    const subjectName = req.body.subject;
-
-    try {
-        const teacher = await TeacherModel.findOne({email: teacherEmail})
-        if(teacher) {
-            res
-                .status(409)
-                .send(
-                    {
-                        statusCode: 409,
-                        message: 'Conflict. Teacher already exists.'
-                    }
-                )
-        } else {
-            const subject = await SubjectModel.findOne({name: subjectName});
-            if(!subject) {
-                res
-                .status(500)
-                .send(
-                    {
-                        statusCode: 409,
-                        message: 'Conflict. Teacher already exists.'
-                    }
-                )
-            } else {
-            
-            const newTeacher = new TeacherModel(
-                {
-                    firstName: req.body.firstName,
-                    lastName: req.body.lastName,
-                    email: teacherEmail,
-                    pswHash: hashedPassword,
-                    avatar : req.body.avatar,
-                }
-            )
-        
-            const teacherToSave = await newTeacher.save();
-            res
-                .status(201)
-                .send(
-                    {
-                        statusCode: 201,
-                        payload: teacherToSave
-                    }
-                )
-            }
-        }
-    } catch(e) {
-        console.log(e)
-        res
-            .status(500)
-            .send (
-                {
-                    statusCode: 500,
-                    message: 'Internal Server Error'
-                }
-            )
-
-    }
-})
-
+});
 
 
 module.exports = router;

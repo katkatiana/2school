@@ -9,12 +9,9 @@
 /******** Import Section  *******************************************************/
 
 import React, { useState } from 'react';
-import Navbar from '../Navbar/Navbar';
-import axios from 'axios';
 import './LoginForm.css';
 import { executeNetworkOperation, saveAuthToken } from '../../utils/utils';
 import { useNavigate } from 'react-router-dom';
-
 
 
 /******** Component Definition  *************************************************/
@@ -80,7 +77,6 @@ const LoginForm = () => {
 
     return(
         <>
-            <Navbar />
             <div className="login-container">
                 <h2 className = 'first-title'>Electronic LogBook</h2>
                 <h2 className = 'second-title'>Login to 2school</h2>

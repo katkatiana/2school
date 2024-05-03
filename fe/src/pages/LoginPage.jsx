@@ -11,6 +11,9 @@ import React from 'react';
 import LoginForm from '../components/LoginForm/LoginForm';
 import { useEffect } from 'react';
 import { resetAuthToken } from '../utils/utils';
+import Navbar from '../components/Navbar/Navbar';
+import Footer from '../components/Footer/Footer';
+
 
 /******** Component Definition  *************************************************/
 
@@ -31,7 +34,11 @@ const LoginPage = () => {
     }, [])
 
     return (
-        <LoginForm />
+        <>
+            <Navbar />
+            <LoginForm />
+            <Footer />
+        </>
     )
 }
 

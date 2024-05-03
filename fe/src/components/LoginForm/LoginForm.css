@@ -33,7 +33,6 @@ h2 {
                     red);
             -webkit-background-clip: text;
             color: transparent;
-    font-size: medium;
 }
 
 
@@ -44,7 +43,6 @@ h2 {
 label {
     display: block;
     margin-bottom: 5px;
-    font-size: smaller;
 }
 
 input[type="email"],

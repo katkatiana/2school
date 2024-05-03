@@ -10,6 +10,7 @@
 const info = require('./info');
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
+const jwt = require('jsonwebtoken');
 
 
 /******** Functions Section  *******************************************************/
@@ -34,7 +35,6 @@ const sendResponse = (res, statusCode, message, payloadName, payload, headers) =
     }
 
 }
-
 
 const findUserCategory = async (userId) => {
 
@@ -61,9 +61,38 @@ const findUserCategory = async (userId) => {
     }
 }
 
+const getUserObjFromToken = async (req) => {
+    const token = req.headers['authorization'];
+    console.log(req.authUserObj);
+    return await jwt.decode(token);
+}
+
+const checkIdConsistency = (userId, targetObj, propertyNameArray) =>
+{
+    let returnFlag = false;
+
+    propertyNameArray.map(p => {
+        const targetPropertyArray = targetObj[p];
+        if(targetPropertyArray){
+            targetPropertyArray.map(obj => {
+                if(obj._id.toString() === userId){
+                    returnFlag = true;
+                    return;
+                }
+            });
+        }
+    });
+    console.log("[checkIdConsistency] Check that userId:"+userId+" is contained in the properties of object:\n"+targetObj+"\ncheckIdConsistency RESULT: " +returnFlag);
+    return returnFlag;
+
+}
+
+
 /******** Export Section  *******************************************************/
 
 module.exports = {
     sendResponse: sendResponse,
-    findUserCategory: findUserCategory
+    findUserCategory: findUserCategory,
+    getUserObjFromToken : getUserObjFromToken,
+    checkIdConsistency : checkIdConsistency
 }

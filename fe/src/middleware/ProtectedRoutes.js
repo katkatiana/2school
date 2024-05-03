@@ -20,8 +20,8 @@ const checkAuth = (roles) => {
         return false;
     } else {
         let decodedUser = jwtDecode(token);
-        let decodedUserRole = decodedUser.userRole;
-        if(roles.includes(decodedUserRole)){
+        let decodedUserCategory = decodedUser.userCategory;
+        if(roles.includes(decodedUserCategory)){
             return true;
         } else {
             return false;

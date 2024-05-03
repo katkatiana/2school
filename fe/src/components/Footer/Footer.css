@@ -1,0 +1,16 @@
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 8%;
+    background-color: rgba(153, 182, 192, 0.356);
+    color: black;
+    text-align: center;
+    font-size: smaller;
+
+  }
+
+  .copyright{
+    margin-block-start: 25px;
+  }

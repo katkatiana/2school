@@ -22,6 +22,10 @@ const ClassSchema = new Schema(
             type: Number,
             required: true
         },
+        logo: {
+            type: String,
+            required: true
+        },
         teachersId: [
             {
                 type: Schema.Types.ObjectId,

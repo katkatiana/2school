@@ -10,7 +10,11 @@
 import React, { useEffect, useState } from "react";
 import './Navbar.css'
 import { getAuthUserFromToken, saveAuthToken, resetAuthToken } from '../../utils/utils';
+import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
+import { Tooltip } from 'antd';
+
 
 /******** Component Definition  *************************************************/
 /**
@@ -23,6 +27,7 @@ const Navbar = () => {
     const { token, decodedUser } = getAuthUserFromToken();
     const [currentUserFullName, setCurrentUserFullName] = useState('');
     const [loggedIn, setLoggedIn] = useState(false);
+    const [size, setSize] = useState('small');
     const navigate = useNavigate();
 
     /**
@@ -74,10 +79,17 @@ const Navbar = () => {
 
 
     return(
-        <nav className = "myNav">
-            <span className = "logo-img"><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></span>
+        <nav className = "myNav container">
+            <span className = "logo-img column-center"><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></span>
             {
-              loggedIn ? <div>  Hi, {`${currentUserFullName}`}  <button type = "button" onClick = {handleLogout}>Log out</button></div> : ''
+              loggedIn ? <div className = "logged-nav column-left">  Hi, {`${currentUserFullName}`}
+                            <Tooltip title="Account Info">
+                            <Button type="primary" shape="round" icon={<UserOutlined />} size={size} onClick={(e) => navigate("/userDetail")} className = "nav-buttons" />
+                            </Tooltip>
+                            <Tooltip title="Logout">
+                            <Button type="primary" shape="round" icon={<LogoutOutlined />} size={size}  onClick = {handleLogout} className = "nav-buttons" /> 
+                            </Tooltip>
+                        </div> : ''
             }
         </nav>
     )
