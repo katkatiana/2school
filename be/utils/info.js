@@ -14,7 +14,9 @@ const STUDENT_CATEGORY_ID = 589;
 const UNKNOWN_CATEGORY_ID = 0;
 const ADMIN_CATEGORY_ID = 118;
 const TOKEN_EXPIRATION_PERIOD = '1h'
-
+const ITEM_TYPE_HOMEWORK = "homework";
+const ITEM_TYPE_DISCIPLINARYFILE = "disciplinaryFile";
+const ITEM_TYPE_ALLOWED = [ITEM_TYPE_HOMEWORK, ITEM_TYPE_DISCIPLINARYFILE];
 
 /******** Export Section  *******************************************************/
 
@@ -25,5 +27,8 @@ module.exports = {
     STUDENT_CATEGORY_ID,
     UNKNOWN_CATEGORY_ID,
     ADMIN_CATEGORY_ID,
-    TOKEN_EXPIRATION_PERIOD
+    TOKEN_EXPIRATION_PERIOD,
+    ITEM_TYPE_HOMEWORK,
+    ITEM_TYPE_DISCIPLINARYFILE,
+    ITEM_TYPE_ALLOWED
 }

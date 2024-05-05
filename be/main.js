@@ -28,7 +28,8 @@ const userRoute = require('./routes/user');
 const classRoute = require('./routes/class');
 const homeworkRoute = require('./routes/homework');
 const deleteItemRoute = require('./routes/deleteItem');
-
+const modifyItemRoute = require('./routes/modifyItem');
+const adminRoute = require('./routes/admin');
 /******** Middleware Section  *******************************************************/
 
 app.use(express.json());
@@ -47,6 +48,8 @@ app.use('/', userRoute);
 app.use('/', classRoute);
 app.use('/', homeworkRoute);
 app.use('/', deleteItemRoute);
+app.use('/', modifyItemRoute);
+app.use('/', adminRoute);
 
 /** Connection to mongoose */
 mongoose.connect(process.env.MONGODB_URL);

@@ -10,6 +10,7 @@
 const info = require('./info');
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
+const AdminModel = require('../models/admin');
 const jwt = require('jsonwebtoken');
 
 
@@ -51,7 +52,12 @@ const findUserCategory = async (userId) => {
         if(user) {
             userCategory = info.STUDENT_CATEGORY_ID;
         } else {
-            userCategory = info.UNKNOWN_CATEGORY_ID;
+            user = await AdminModel.findById(userId);
+            if(user){
+                userCategory = info.ADMIN_CATEGORY_ID;
+            } else {
+                userCategory = info.UNKNOWN_CATEGORY_ID;
+            }            
         }
     }
 
