@@ -14,6 +14,7 @@ const ClassModel = require('../models/class');
 const tools = require('../utils/utils');
 const info = require('../utils/info');
 const upload = require('../middleware/handleHomeworkUpload');
+const deletetools = require('../middleware/validateItemToDelete');
 
 /********************************** Function section *************************************************/
 
@@ -48,6 +49,7 @@ const validateHomework = async (req, res, next) => {
     
     let subjectCheck = false;
     let teacherCheck = false;
+    let fileCheck = true;
 
     if(content.length === 0){
         errors.push("Homework cannot be empty.");
@@ -106,13 +108,23 @@ const validateHomework = async (req, res, next) => {
     if(contentType.includes("multipart/form-data")){
         if(!(req.file.path) || !(req.file.publicId)){
             errors.push("There was an issue while uploading the requested files.");
+            fileCheck = false;
         }
     }
     
     if(errors.length > 0) {
         tools.sendResponse(res, 400, "Homework creation failed due to validation errors.", "errors", errors)
         console.log("[validateHomework] Failed with errors:\n", errors);
-        upload.deleteContentByPublicId(req.file.publicId);
+        /**
+         * This deletes the image from cloudinary.
+         * Needed here since the upload of the image happens before the validation
+         * of the body is possible because the body is passed as multipart/form-data in this case
+         * and needs a pre-processing made by multer.
+         */
+        if(fileCheck){
+            // delete the image, but only if it has been passed and it is valid
+            await deletetools.deleteContentByPublicId(req.file.publicId);
+        }
     } else {
         next()
     }

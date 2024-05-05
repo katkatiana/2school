@@ -21,7 +21,8 @@ permissionTable[info.TEACHER_CATEGORY_ID] = {
     'getClasses' : true,
     'getClass'   : true,
     'getSubjects': true,
-    'addHomeworkToClass' : true
+    'addHomeworkToClass' : true,
+    'deleteItem' : true
 };
 
 permissionTable[info.STUDENT_CATEGORY_ID] = {
@@ -29,7 +30,9 @@ permissionTable[info.STUDENT_CATEGORY_ID] = {
     'getUser'    : true,
     'modifyUser' : true,
     'getClasses' : true,
-    'getClass'   : true
+    'getClass'   : true,
+    'addHomeworkToClass' : false,
+    'deleteItem' : false,
 };
 
 permissionTable[info.ADMIN_CATEGORY_ID] = {
@@ -37,7 +40,9 @@ permissionTable[info.ADMIN_CATEGORY_ID] = {
     'getUser'    : true,
     'modifyUser' : true,
     'getClasses' : true,
-    'getClass'   : true
+    'getClass'   : true,
+    'addHomeworkToClass' : true,
+    'deleteItem' : true
 };
 
 const verifyToken = async (req, res, next) => {
@@ -61,7 +66,15 @@ const verifyToken = async (req, res, next) => {
                         //id contained in token corresponds to an existing user id. Now check user category
                         if(decodedToken.userCategory === userCategory) {
                             //userCategory matches. Now check permissions
-                            const destinationRoute = req.originalUrl.split("/", 2)[1]
+                            // check that the url contains ? (query params)
+                            let destinationRoute;
+                            if(req.originalUrl.indexOf("?") > -1){
+                                // we have url as query param. split accordingly
+                                destinationRoute = req.originalUrl.split("/")[1]
+                                destinationRoute = destinationRoute.split("?")[0];
+                            } else {
+                                destinationRoute = req.originalUrl.split("/", 2)[1]
+                            }                            
                             const permission = permissionTable[userCategory.toString()][destinationRoute];
                             if(permission) {
                                 console.log("[verifyToken] Permission granted to route " + destinationRoute + " for user " + user._id);

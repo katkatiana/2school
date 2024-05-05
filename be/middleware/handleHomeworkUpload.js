@@ -60,12 +60,4 @@ const handleHomeworkUpload = async (req, res, next) => {
     }
 }
 
-const deleteContentByPublicId = async (publicId) => {
-    cloudinary.api.delete_resources_by_tag(publicId, {resource_type: "raw"})
-    .then(result => console.log(result));
-}
-
-module.exports = {
-    handleHomeworkUpload : handleHomeworkUpload,
-    deleteContentByPublicId: handleHomeworkUpload
-};
+module.exports = handleHomeworkUpload;

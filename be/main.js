@@ -27,7 +27,7 @@ const teachersRoute = require('./routes/teacher');
 const userRoute = require('./routes/user');
 const classRoute = require('./routes/class');
 const homeworkRoute = require('./routes/homework');
-
+const deleteItemRoute = require('./routes/deleteItem');
 
 /******** Middleware Section  *******************************************************/
 
@@ -46,7 +46,7 @@ app.use('/', teachersRoute);
 app.use('/', userRoute);
 app.use('/', classRoute);
 app.use('/', homeworkRoute);
-
+app.use('/', deleteItemRoute);
 
 /** Connection to mongoose */
 mongoose.connect(process.env.MONGODB_URL);

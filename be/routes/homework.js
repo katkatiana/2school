@@ -20,15 +20,11 @@ const { findOneAndUpdate } = require('../models/subject');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verifyToken');
 const validateHomework = require('../middleware/validateHomework');
-const upload = require('../middleware/handleHomeworkUpload');
-
-
-
-
+const handleHomeworkUpload = require('../middleware/handleHomeworkUpload');
 
 /******** Function Section  ****************************************************/
 
-router.post('/addHomeworkToClass/:classId', verifyToken, upload.handleHomeworkUpload, validateHomework, async (req, res) => {
+router.post('/addHomeworkToClass/:classId', verifyToken, handleHomeworkUpload, validateHomework, async (req, res) => {
 
     /**
      * POST payload structured in this way:
