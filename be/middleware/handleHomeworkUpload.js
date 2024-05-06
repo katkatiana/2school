@@ -2,6 +2,8 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require("path");
+const tools = require('../utils/utils');
+const info = require('../utils/info');
 
 /** Configuration of Cloudinary in order to connect to our personal account and upload documents there. */
 cloudinary.config(
@@ -15,48 +17,75 @@ cloudinary.config(
 
 const handleHomeworkUpload = async (req, res, next) => {
 
+    const itemType = req.query.itemType;    
     const contentType = req.headers["content-type"];
+    let conditionToCheck;
 
-    if(contentType.includes("multipart/form-data"))
-    {
-        const {classId} = req.params;
-        let publicId;
-        const cloudStorage = new CloudinaryStorage({
-            cloudinary: cloudinary,
-            params: (req, file) => {
-            const folderPath = "class_"+classId+"_homeworks";
-            const fileExtension = path.extname(file.originalname).substring(1);
-            publicId = `${file.fieldname}-${Date.now()}`;
-            
-            return {
-                resource_type: "auto",
-                folder: folderPath,
-                public_id: publicId,
-                format: fileExtension,
-                tags: publicId
-            };
-            },
-        });
-
-        const cloudUpload = multer({ 
-            storage: cloudStorage,
-        });
-
-        let upload = await cloudUpload.single("attachment");
-
-        upload(req, res, function (err) {
-            if(err){
-                console.log(err);
-                tools.sendResponse(res, 400, "Homework file upload failed.");
-            } else {
-                // url is passed as req.file.path
-                req.file.publicId = publicId;
-                next();
-            }
-        });
+    if(!contentType){
+        tools.sendResponse(res, 400, "Invalid content-type.");
     } else {
-        // skip if no multipart data has been sent
-        next();
+        // this middleware gets called during homework first creation and for
+        // existing homework object update, so we must distinguish the two cases
+        if(itemType){
+            // this is the case of homework update
+            conditionToCheck = 
+                ((itemType === info.ITEM_TYPE_HOMEWORK) && (contentType.includes("multipart/form-data")))
+        } else {
+            // this is the case of homework first creation and upload
+            conditionToCheck = (contentType.includes("multipart/form-data"));
+        }
+
+        if(conditionToCheck) 
+        {
+            const classId = req.query.classId;
+            let publicId;
+
+            if(!classId){
+                tools.sendResponse(res, 400, "ClassID must be provided.");
+            } else {
+
+                const cloudStorage = new CloudinaryStorage({
+                    cloudinary: cloudinary,
+                    params: (req, file) => {
+                    const folderPath = "class_"+classId+"_homeworks";
+                    const fileExtension = path.extname(file.originalname).substring(1);
+                    publicId = `${file.fieldname}-${Date.now()}`;
+                    
+                    return {
+                        resource_type: "auto",
+                        folder: folderPath,
+                        public_id: publicId,
+                        format: fileExtension,
+                        tags: publicId
+                    };
+                    },
+                });
+        
+                const cloudUpload = multer({ 
+                    storage: cloudStorage,
+                });
+        
+                let upload = await cloudUpload.single("attachment");
+        
+                upload(req, res, function (err) {
+                    if(err || !(req.file)){
+                        if(err){
+                            console.log(err);
+                        } else {
+                            console.log("[handleHomeworkUpload] File upload failed.")
+                        }
+                        tools.sendResponse(res, 400, "Homework file upload failed.");
+                    } else {
+                        // url is passed as req.file.path
+                        req.file.publicId = publicId;
+                        next();
+                    }
+                });
+            }
+        } else {
+            // skip if no multipart data has been sent
+            next();
+        }
     }
 }
 

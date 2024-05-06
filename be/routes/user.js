@@ -17,7 +17,7 @@ const info = require('../utils/info');
 const { findOneAndUpdate } = require('../models/subject');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verifyToken');
-
+const usertools = require('../middleware/validateUserRoute');
 
 
 /******** Function Section  ****************************************************/
@@ -45,11 +45,11 @@ const verifyToken = require('../middleware/verifyToken');
  *      500:
  *        description: Server Error
  */
-router.get('/getUser/:id', verifyToken, async (req, res) => {
-    const { id } = req.params;
+router.get('/getUser/:userId', verifyToken, async (req, res) => {
+    const { userId } = req.params;
     
     try {
-        let {user, userCategory } = await tools.findUserCategory(id);
+        let {user, userCategory } = await tools.findUserCategory(userId);
 
         if(userCategory === info.UNKNOWN_CATEGORY_ID) {
             throw new Error('User id not found')
@@ -121,44 +121,47 @@ router.get('/getUser/:id', verifyToken, async (req, res) => {
  *         - password
  *                 
  */
-router.patch('/modifyUser/:id', verifyToken, async (req, res) => {
+router.patch('/modifyUser/:userId', verifyToken, usertools.validateUserToModify, async (req, res) => {
 
-    const { id } = req.params;
-
+    const { userId } = req.params;
+    const targetModelForModify = req.targetModelForModify; // added by validateItemToModify middleware
+    const paramsToModify = req.paramsToModify; // added by validateItemToModify middleware
+    const recomputeAccessToken = req.recomputeAccessToken
+    const userCategoryFromDb = req.targetUserCategory
     try{
-        let {user, userCategory} = await tools.findUserCategory(id)
-        if(!user) {
-            tools.sendResponse(res, 404, 'User not found')
+   
+        let updateResult = await targetModelForModify.findOneAndUpdate(
+            {_id: userId},
+            paramsToModify,
+            {new: true}
+        );
+
+        if(updateResult){
+            console.log(updateResult);
+            /* Since user info are stored in the jwt token, we need to recompute the token and send it back to the user */
+            if(recomputeAccessToken){
+                const token = jwt.sign(
+                    {
+                        userId: userId,
+                        firstName: updateResult.firstName,
+                        lastName: updateResult.lastName,
+                        email: updateResult.email,
+                        avatar: updateResult.avatar,
+                        userCategory: userCategoryFromDb
+                    }, process.env.SECRET_KEY, {
+                        expiresIn: info.TOKEN_EXPIRATION_PERIOD
+                    }
+                )
+                const authHeader = {"Authorization" : token};
+                tools.sendResponse(res, 200, 'Updated successfully.', "updatedUser", updateResult, authHeader);    
+            } else {
+                tools.sendResponse(res, 200, 'Updated successfully.', "updatedUser", updateResult);    
+            }
         } else {
-            
-            if(req.body['avatar']){
-                user.avatar = req.body.avatar;
-            }
-            
-            if(req.body['password']){
-                const saltRounds = 10;
-                const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-                user.pswHash = hashedPassword;
-            }
+            console.log(updateResult);
+            throw new Error ("Requested user update operation failed, please try again.");
+        }
 
-            await user.save()
-
-            /* Since user avatar is stored in the jwt token, we need to recompute the token and send it back to the user */
-            const token = jwt.sign(
-                {
-                    userId: user._id,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    email: user.email,
-                    avatar: user.avatar,
-                    userCategory: userCategory
-                }, process.env.SECRET_KEY, {
-                    expiresIn: info.TOKEN_EXPIRATION_PERIOD
-                }
-            )
-            const authHeader = {"Authorization" : token};
-            tools.sendResponse(res, 200, 'Updated successfully.', "updatedUser", user, authHeader);
-        }       
     } catch(e){
         console.log(e)
         tools.sendResponse(res, 500, 'Internal Server Error')

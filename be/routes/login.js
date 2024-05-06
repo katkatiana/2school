@@ -12,6 +12,7 @@ const bcrypt = require('bcrypt');
 const router = express.Router();
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
+const AdminModel = require('../models/admin');
 const jwt = require('jsonwebtoken');
 const tools = require('../utils/utils');
 const validateLoginBody = require('../middleware/validateLoginBody');
@@ -61,16 +62,9 @@ router.post('/login', validateLoginBody, async (req, res) => {
 
     try{
         let userCategory;
-        const userTeacher = await TeacherModel.findOne(
-            {
-                email: loginEmail
-            }
-        )
-        const userStudent = await StudentModel.findOne(
-            {
-                email: loginEmail
-            }
-        )
+        const userTeacher = await TeacherModel.findOne({email: loginEmail});
+        const userStudent = await StudentModel.findOne({email: loginEmail});
+        const userAdmin = await AdminModel.findOne({email: loginEmail});
 
         if(userTeacher) {
             user = userTeacher;
@@ -78,6 +72,9 @@ router.post('/login', validateLoginBody, async (req, res) => {
         } else if (userStudent) {
             user = userStudent;
             userCategory = info.STUDENT_CATEGORY_ID;
+        } else if (userAdmin) {
+            user = userAdmin;
+            userCategory = info.ADMIN_CATEGORY_ID;
         } else {
             user = undefined;
         }
@@ -97,10 +94,10 @@ router.post('/login', validateLoginBody, async (req, res) => {
                 const token = jwt.sign(
                     {
                         userId: user._id,
-                        firstName: user.firstName,
-                        lastName: user.lastName,
+                        firstName: user.firstName || "admin",
+                        lastName: user.lastName || "",
                         email: user.email,
-                        avatar: user.avatar,
+                        avatar: user.avatar || "",
                         userCategory: userCategory
                     }, process.env.SECRET_KEY, {
                         expiresIn: info.TOKEN_EXPIRATION_PERIOD

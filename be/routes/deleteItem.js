@@ -16,7 +16,6 @@ const HomeworkModel = require('../models/homework');
 const ClassModel = require('../models/class');
 const tools = require('../utils/utils');
 const info = require('../utils/info');
-const { findByIdAndDelete } = require('../models/subject');
 const jwt = require('jsonwebtoken');
 const verifyToken = require('../middleware/verifyToken');
 const deletetools = require('../middleware/validateItemToDelete');
@@ -28,19 +27,50 @@ router.delete('/deleteItem', verifyToken, deletetools.validateItemToDelete, asyn
     const targetModelForDeletion = req.targetModelForDeletion; // added by validateItemToDelete middleware
     const itemIdToDelete = req.query.itemId;
     const itemType = req.query.itemType.toString();
-    
 
     try{    
 
         // homeworks can have attachments. Check if it exists and, if yes, delete it.
-        if(itemType === deletetools.ITEM_TYPE_HOMEWORK){
+        if(itemType === info.ITEM_TYPE_HOMEWORK){
             let publicIdOfCloudinaryResource = req.publicIdOfCloudinaryResource;
             await deletetools.deleteContentByPublicId(publicIdOfCloudinaryResource);
         }
-
+        // delete the object from db
         const deleteResult = await targetModelForDeletion.findByIdAndDelete(itemIdToDelete);
-
         if(deleteResult){
+            let classOfHomework = await ClassModel.find(
+                {
+                    homeworkId: {
+                        $elemMatch: { $eq: itemIdToDelete }
+                    }
+                }
+            )
+
+            let classOfDisciplinaryFile = await ClassModel.find(
+                {
+                    disciplinaryFileId: {
+                        $elemMatch: { $eq: itemIdToDelete }
+                    }
+                }
+            )
+
+            if(classOfHomework && classOfHomework.length > 0){
+                classOfHomework.map(async cl => {
+                    let elemIndex = cl["homeworkId"].indexOf(itemIdToDelete);
+                    console.log(elemIndex);
+                    cl["homeworkId"].splice(elemIndex, 1);
+                    await cl.save();
+                 });
+            }
+
+            if(classOfDisciplinaryFile && classOfDisciplinaryFile.length > 0){
+                classOfDisciplinaryFile.map(async cl => {
+                    let elemIndex = cl["disciplinaryFileId"].indexOf(itemIdToDelete);
+                    cl["disciplinaryFileId"].splice(elemIndex, 1);
+                    await cl.save();
+                 });
+            } 
+
             tools.sendResponse(res, 200, "Resource was deleted successfully."); 
         } else {
             console.log(deleteResult);

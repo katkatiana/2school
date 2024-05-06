@@ -19,7 +19,7 @@ const validateSignupBody = require('../middleware/validateSignupBody');
 const avatars = require('../utils/avatars');
 const info = require('../utils/info');
 const verifyToken = require('../middleware/verifyToken');
-
+const crypto = require('crypto');
 
 
 /******** Variables Section  *******************************************************/
@@ -93,7 +93,9 @@ router.post('/signup', verifyToken, validateSignupBody, async (req, res) => {
 
     /* db stores only the hash of the received password, and not the password itself */
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(DEFAULT_PASSWORD, saltRounds);
+    const randomString = crypto.randomBytes(64).toString('hex');
+    const defaultPassword_salted = DEFAULT_PASSWORD+randomString;
+    const hashedPassword = await bcrypt.hash(defaultPassword_salted, saltRounds);
     const userCategory = req.body.userCategory;
     const userFullName = req.body.firstName + " " + req.body.lastName;
     const userEmail = req.body.email;
@@ -104,7 +106,7 @@ router.post('/signup', verifyToken, validateSignupBody, async (req, res) => {
                 'Welcome to '+info.APP_NAME+'! We\'re very excited to have you on board.',
                 'Since you\'ve signed up, we\'ve generated a temporary password for you!',
                 'You\'ll find it below.',
-                DEFAULT_PASSWORD,
+                defaultPassword_salted,
                 'After your first login, you will need to change it in your profile settings.'
             ],
             outro: 'Need help, or have questions? Just send an email to ' + info.CONTACT_EMAIL + ', we\'d love to help.'

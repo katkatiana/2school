@@ -12,6 +12,7 @@ const router = express.Router();
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
 const ClassModel = require('../models/class');
+const SubjectModel = require('../models/subject');
 const verifyToken = require('../middleware/verifyToken');
 const tools = require('../utils/utils');
 const info = require('../utils/info');
@@ -116,10 +117,15 @@ router.get('/getClass/:classId', verifyToken, async (req, res) => {
         await ClassModel.findById(classId)
                         .populate('teachersId')
                         .populate('studentsId')
-                        .populate('homeworkId')
+                        .populate({
+                            path: 'homeworkId',
+                            populate: {
+                                path: "subjectId",
+                                model: SubjectModel
+                            }
+                        })
                         .populate('disciplinaryFileId')
                         .exec();
-
         if(!classObj){
             tools.sendResponse(res, 404, "Specified Classroom was not found.")
         } else {

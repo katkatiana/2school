@@ -38,7 +38,7 @@ const validateHomework = async (req, res, next) => {
         teacherId,
         subjectId,
     } = req.body
-    const {classId} = req.params;
+    const classId = req.query.classId;
     const teacherObj = await TeacherModel.findById(teacherId).populate('subjectsId').exec();
     const subjectObj = await SubjectModel.findById(subjectId);
     const contentType = req.headers["content-type"];
@@ -49,7 +49,7 @@ const validateHomework = async (req, res, next) => {
     
     let subjectCheck = false;
     let teacherCheck = false;
-    let fileCheck = true;
+    let fileCheck = false;
 
     if(content.length === 0){
         errors.push("Homework cannot be empty.");
@@ -81,7 +81,7 @@ const validateHomework = async (req, res, next) => {
         })
         if(!subjectCheck){
             errors.push("The specified subject is not assigned to the given teacher.");
-        }
+        } 
     }
 
     // check that the teacher is part of the class
@@ -108,7 +108,8 @@ const validateHomework = async (req, res, next) => {
     if(contentType.includes("multipart/form-data")){
         if(!(req.file.path) || !(req.file.publicId)){
             errors.push("There was an issue while uploading the requested files.");
-            fileCheck = false;
+        } else {
+            fileCheck = true;
         }
     }
     

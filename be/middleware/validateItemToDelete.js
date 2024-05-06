@@ -30,12 +30,6 @@ cloudinary.config(
     }
 )
 
-const ITEM_TYPE_HOMEWORK = "homework";
-const ITEM_TYPE_DISCIPLINARYFILE = "disciplinaryFile";
-
-const ITEM_TYPE_ALLOWED = [ITEM_TYPE_HOMEWORK, ITEM_TYPE_DISCIPLINARYFILE];
-
-
 
 
 /********************************** Function section *************************************************/
@@ -53,13 +47,13 @@ const ITEM_TYPE_ALLOWED = [ITEM_TYPE_HOMEWORK, ITEM_TYPE_DISCIPLINARYFILE];
 const validateItemToDelete = async (req, res, next) => {
     const errors = [];
 
-    const itemType = req.query.itemType.toString();
-    const itemId = req.query.itemId.toString();
+    let itemType = req.query.itemType;
+    let itemId = req.query.itemId;
     const userObjFromToken = req.authUserObjFromToken; // added by verifyTOken middleware
+    const userCategoryFromToken = userObjFromToken.userCategory; //from verifyToken
     let targetDbModel;
     let authorCheck = false;
     let itemInDb;
-
 
     // check that itemtype is correct
     if(!itemType){
@@ -67,12 +61,13 @@ const validateItemToDelete = async (req, res, next) => {
     }
 
     if(itemType){
-        if(!(ITEM_TYPE_ALLOWED.includes(itemType))){
+        itemType = itemType.toString();
+        if(!(info.ITEM_TYPE_ALLOWED.includes(itemType))){
             errors.push("Unrecognized item type.");
         } else {
-            if(itemType.toString() === ITEM_TYPE_HOMEWORK){
+            if(itemType === info.ITEM_TYPE_HOMEWORK){
                 targetDbModel = HomeworkModel;
-            } else if(itemType.toString() === ITEM_TYPE_DISCIPLINARYFILE){
+            } else if(itemType === info.ITEM_TYPE_DISCIPLINARYFILE){
                 targetDbModel = DisciplinaryFileModel;
             } else {
                 console.log("Not possible!")
@@ -83,6 +78,8 @@ const validateItemToDelete = async (req, res, next) => {
 
     if(!itemId){
         errors.push("You must provide a valid itemId in order to perform a delete operation.");
+    } else {
+        itemId = itemId.toString();
     }
 
     if(itemId && itemType){
@@ -102,6 +99,10 @@ const validateItemToDelete = async (req, res, next) => {
             authorCheck = true;
         }
 
+        if(userCategoryFromToken === info.ADMIN_CATEGORY_ID){
+            authorCheck = true;
+        }
+
         if(!authorCheck){
             errors.push("The specified userId is not the author of the resource, so it is not allowed to perform the requested operation");
         }
@@ -112,9 +113,8 @@ const validateItemToDelete = async (req, res, next) => {
         console.log("[validateItemToDelete] Failed with errors:\n", errors);
     } else {
         req.targetModelForDeletion = targetDbModel; // so the next code knows about the model on which the delete is to be performed
-        
-        // homeworks can have attachments. Check if it exists and, if yes, delete it.
-        if(itemType === ITEM_TYPE_HOMEWORK){
+        // homeworks can have attachments. Check if it exists and, if yes, provide the publicId for deletion to the next middleware
+        if(itemType === info.ITEM_TYPE_HOMEWORK){
             let cloudinaryAttachmentUrl = itemInDb.attachment;
             if(cloudinaryAttachmentUrl){
                 let publicIdOfCloudinaryResource = cloudinaryAttachmentUrl.split('/').pop().split(".")[0];
@@ -133,8 +133,6 @@ const deleteContentByPublicId = async (publicId) => {
 
 module.exports = {
     validateItemToDelete : validateItemToDelete,
-    ITEM_TYPE_HOMEWORK : ITEM_TYPE_HOMEWORK,
-    ITEM_TYPE_DISCIPLINARYFILE : ITEM_TYPE_DISCIPLINARYFILE,
     deleteContentByPublicId : deleteContentByPublicId
 };
 

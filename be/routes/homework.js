@@ -24,7 +24,7 @@ const handleHomeworkUpload = require('../middleware/handleHomeworkUpload');
 
 /******** Function Section  ****************************************************/
 
-router.post('/addHomeworkToClass/:classId', verifyToken, handleHomeworkUpload, validateHomework, async (req, res) => {
+router.post('/addHomeworkToClass', verifyToken, handleHomeworkUpload, validateHomework, async (req, res) => {
 
     /**
      * POST payload structured in this way:
@@ -44,7 +44,7 @@ router.post('/addHomeworkToClass/:classId', verifyToken, handleHomeworkUpload, v
         subjectId,
     } = req.body
 
-    const {classId} = req.params;
+    const classId = req.query.classId;
     let newHomework;
 
     try{
