@@ -1,6 +1,6 @@
 /**
- * @fileoverview SelectedClass.jsx
-
+ * @fileoverview UserPage.jsx
+ * This component renders the user info.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */
@@ -10,26 +10,26 @@
 import React from 'react';
 import Navbar from '../components/Navbar/Navbar';
 import Footer from '../components/Footer/Footer'
-import ClassDetails from '../components/ClassDetails/ClassDetails';
-import TabExample from '../components/ClassDetails/TabExample';
+import UserInfo from '../components/UserInfo/UserInfo';
+
 
 /******** Component Definition  *************************************************/
 
 /**
  * Homepage
- * This component renders the page of the selected class.
- * @returns the instantiation of the ClassDetails component.
+ * This component renders the home page of the application.
+ * @returns the instantiation of the Main component.
  */
-const SelectedClass = () => {
+const UserPage = () => {
 
     return (
         <>
             <Navbar />
-            <ClassDetails />
+            <UserInfo />
             <Footer />
         </>
     )
 }
 
 
-export default SelectedClass;
+export default UserPage;

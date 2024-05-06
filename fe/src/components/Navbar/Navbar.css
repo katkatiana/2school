@@ -1,16 +1,18 @@
 .myNav{
     display: flex;
     justify-content: center;
+    box-shadow: 0px -4px 11px 7px rgba(0, 0, 0, 0.07);
 }
 
 
 .logo-img {
     display: flex;
     justify-content: center;
+    padding: 1%;
 }
 
 img{
-    width: 15%;
+    width: 25%;
 }
 
 .logged-nav{
@@ -18,6 +20,17 @@ img{
     gap: 10px;
     align-items: center;
 }
+
+@media screen and (max-width: 768px) {
+    myNav {
+        height: 35px;
+    }
+
+    .welcome-msg{
+        display: none;
+    }
+}
+
 /* 
 .container{
     display: flex;

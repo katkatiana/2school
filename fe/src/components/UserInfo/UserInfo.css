@@ -4,6 +4,11 @@ body {
     background-color: #f2f2f2;
 }
 
+.container-userInfo {
+    flex-direction: column;
+    margin-block-start: 5%;
+}
+
 .user-info {
     display: flex;
     align-items: center;
@@ -14,7 +19,8 @@ body {
     height: 20%;
     border-radius: 50%;
     overflow: hidden;
-    margin-right: 5%;
+    margin-inline: 5%;
+    margin-block-end: 5%;
 }
 
 .avatar img {
@@ -44,15 +50,16 @@ span {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 50%;
 }
 
-.button-pswd button{
+.button-pswd button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 25%;
-    height: 2vh;
-
+    width: 50%;
+    border-radius: 12px;
+    background-color: rgb(233, 126, 22);
 }
 
 .user-propic{
@@ -66,5 +73,17 @@ span {
 }
 
 #modal-launch{
-    width: 10%!important;
+    width: 7%!important;
+    position: absolute;
+    
+}
+
+.propic-button {
+    border: none;
+    overflow: hidden;
+    border-radius: 12px 12px 12px 12px;
+    background-color: rgb(233, 126, 22);
+    position: relative;
+    bottom: 30px;
+    left: 200px;
 }

@@ -74,3 +74,30 @@ button:hover {
     display: flex;
     justify-content: center;
 }
+
+.email-label{
+    margin-inline-end: 35px;
+}
+
+.psw-label{
+    margin-inline-end: 8px;
+}
+
+@media screen and (max-width: 768px) {
+
+    .login-container{
+        width: 80%;
+    }
+
+    h2 {
+        font-size: 18px!important;
+    }
+
+    label{
+        font-size: 13px!important;
+    }
+
+    .login-form{
+        display: flex!important;
+    }
+}

@@ -79,15 +79,15 @@ const Navbar = () => {
 
 
     return(
-        <nav className = "myNav container">
-            <span className = "logo-img column-center"><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></span>
+        <nav className = "myNav">
+            <span className = "logo-img"><a href = {"http://localhost:3000/login"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a></span>
             {
-              loggedIn ? <div className = "logged-nav column-left">  Hi, {`${currentUserFullName}`}
+              loggedIn ? <div className = "logged-nav"> <span className="welcome-msg"> Hi, {`${currentUserFullName}`}</span>
                             <Tooltip title="Account Info">
-                            <Button type="primary" shape="round" icon={<UserOutlined />} size={size} onClick={(e) => navigate("/userDetail")} className = "nav-buttons" />
+                                <Button type="primary" shape="round" icon={<UserOutlined />} size={size} onClick={(e) => navigate("/userDetail")} className = "nav-buttons" />
                             </Tooltip>
                             <Tooltip title="Logout">
-                            <Button type="primary" shape="round" icon={<LogoutOutlined />} size={size}  onClick = {handleLogout} className = "nav-buttons" /> 
+                                <Button type="primary" shape="round" icon={<LogoutOutlined />} size={size}  onClick = {handleLogout} className = "nav-buttons" /> 
                             </Tooltip>
                         </div> : ''
             }

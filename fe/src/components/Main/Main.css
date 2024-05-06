@@ -1,16 +1,42 @@
 .container{
     display: flex;
     width: 100%;
+    gap: 5%;
+    margin-block-start: 3%;
 }
 
-.column-center {
+.column-center-main {
     flex-grow: 1;
     width: 80%;
-    margin-inline: 3%;
 }
 
-.column-left,
-.column-right{
+.column-left-main,
+.column-right-main{
     flex: 0 0 auto;
     max-width: 25%;
+}
+
+.column-left-main-title{
+    display: flex;
+    justify-content: center;
+}
+
+.column-right-main{
+    margin-block-start: 2%;
+}
+
+.sub-icon {
+    margin-inline-end: 10px;
+}
+
+@media screen and (max-width: 768px) {
+
+    .column-center{
+        margin-inline-start: 40px!important;
+    }
+
+    .column-right {
+        display: none!important;
+    }
+
 }

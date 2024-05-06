@@ -1,0 +1,56 @@
+.container-class-details{
+    display: flex;
+    width: 100%;
+}
+
+.column-center-detailed {
+    flex-grow: 1;
+    width: 60%;
+    margin: 0;
+    padding-block-start: 3%;
+}
+
+.column-right-detailed{
+    display: flex;
+    padding-block-start: 3%;
+    flex: 0 0 auto;
+    width: 25%;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+} 
+
+.ant-table-content{
+    width: 50%;
+}
+
+.ant-table-selection-column{
+    width: 3%;
+}
+
+.homework-button,
+.disciplinary-button{
+    display: flex;
+    justify-content: center;
+    margin-inline-end: 550px;
+    background-color: rgba(15, 191, 15, 0.768);
+    color: white;
+    transition-duration: 0.4s;
+    width: 20%;
+}
+
+.disciplinary-button{
+    background-color: tomato;
+}
+
+.homework-button:hover{
+    background-color: rgba(8, 152, 8, 0.768);
+
+}
+
+.homework-list{
+    display: flex;
+    flex-wrap: wrap;
+}
+

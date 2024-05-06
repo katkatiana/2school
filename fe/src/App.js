@@ -17,6 +17,7 @@ import ProtectedRoutes from "./middleware/ProtectedRoutes.js";
 import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID, ADMIN_CATEGORY_ID } from "./utils/info.js";
 import Homepage from "./pages/Homepage.jsx";
 import SelectedClass from "./pages/SelectedClass.jsx";
+import UserPage from "./pages/UserPage.jsx";
 
 /**
  * App
@@ -39,7 +40,7 @@ function App() {
           <Route path = '/unauthorized' element = {<Unauthorized /> } />
           <Route element = { <ProtectedRoutes allowedRoles={[TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID]}/>} >
             <Route path = '/success' element = {<LoginSuccess /> } />
-            <Route path = '/userDetail' element = {<UserInfo /> } />
+            <Route path = '/userDetail' element = {<UserPage /> } />
             <Route path = '/homepage' element = {<Homepage />} />
             <Route path = '/classDetails/:id' element = {<SelectedClass />} />
           </Route>

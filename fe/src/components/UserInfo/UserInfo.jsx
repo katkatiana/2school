@@ -184,11 +184,11 @@ const UserInfo = () => {
         } else {
             let tokenUserId = decodedUser.userId;
             let outputRes = 
-            await executeNetworkOperation(
-                "get",
-                `/getUser/${tokenUserId}`,
-                "",
-                buildAuthHeader(token)
+                await executeNetworkOperation(
+                    "get",
+                    `/getUser/${tokenUserId}`,
+                    "",
+                    buildAuthHeader(token)
             )
             console.log(outputRes)
             
@@ -216,12 +216,20 @@ const UserInfo = () => {
 
     return(
         <>
-            <Navbar />
-            <div className = 'container'>
+            <div className = 'container-userInfo'>
                 <h2>User Information</h2>
                 <div className="user-info">
                     <div className="avatar">
                         <img src={currentUser.avatar} alt="User Avatar" />
+                        <div id = 'modal-launch'>
+                            <button 
+                                variant="primary" 
+                                onClick={handleShow} 
+                                className = 'propic-button'
+                            >
+                                <icons.PencilSquare />
+                            </button>
+                        </div>
                     </div>
                     
                     <div className="info-details">
@@ -237,19 +245,20 @@ const UserInfo = () => {
                             <label htmlFor="email">Email:</label>
                             <span id="email">{currentUser.email}</span>
                         </div>
-                        
+                        <div className = 'button-pswd'>
+                            <button 
+                                type = 'button'
+                                onClick = {handleChangePassword}
+                            >
+                                {
+                                    isClicked ? "Close" : "Change password"
+                                }
+                            </button>
+                        </div>
+
                     </div>
                 </div>
-                <div className = 'button-pswd'>
-                    <button 
-                        type = 'button'
-                        onClick = {handleChangePassword}
-                    >
-                        {
-                            isClicked ? "Close" : "Change password"
-                        }
-                    </button>
-                </div>
+                
                 {
                         isClicked ?    
                             <div>
@@ -268,15 +277,7 @@ const UserInfo = () => {
                                 </div>
                         : ""
                     }
-                <div id = 'modal-launch'>
-                    <button 
-                        variant="primary" 
-                        onClick={handleShow} 
-                        className = ''
-                    >
-                        <icons.PencilSquare />
-                    </button>
-                </div>
+                
 
                     <Modal 
                         show={show} 

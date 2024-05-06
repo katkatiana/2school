@@ -11,7 +11,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Main.css';
 import { Avatar, List, Skeleton } from 'antd';
-import { Calendar, theme } from 'antd';
+import { Calendar, theme, Divider } from 'antd';
+import { ReadOutlined } from '@ant-design/icons';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
@@ -32,6 +33,7 @@ const Main = () => {
 
     const [initLoading, setInitLoading] = useState(true);
     const [list, setList] = useState([]);
+    const [listOfSubjects, setListOfSubject] = useState([]);
     const { token } = theme.useToken();
     const wrapperStyle = {
       border: `1px solid ${token.colorBorderSecondary}`,
@@ -57,18 +59,46 @@ const Main = () => {
           }
       }
     }
+
+    const getSubjects = async () => {
+      let { token, decodedUser } = getAuthUserFromToken();
+
+      if(!token){
+        alert("Cannot retrieve user information. Please login again.")
+        navigate("/login");
+      } else {
+          let tokenUserId = decodedUser.userId;
+          let outputRes = await executeNetworkOperation ('get', `/getSubjects/${tokenUserId}`, "", buildAuthHeader(token))
+          console.log(outputRes)
+          if(outputRes.data.statusCode === 200) {
+            setInitLoading(false);
+            setListOfSubject(outputRes.data.payload);
+          } else {
+            alert(outputRes.data.message);
+          }
+      }
+
+    }
     
     useEffect(() => {
       getClasses()
+      getSubjects()
     }, []);
 
     return (
         <>
             <div className = 'container'>
-                <div className='column-left'>
-                    <p>blablalblalblalblallbla</p>
+                <div className='column-left-main'>
+                <Divider orientation="left" className='column-left-main-title'>Your subjects</Divider>
+                <List
+                  size="small"
+                  bordered
+                  dataSource={listOfSubjects}
+                  renderItem={(item) => <List.Item><ReadOutlined className='sub-icon' />{item.name}</List.Item>}
+                />
                 </div>
-                <div className='column-center'>
+                <div className='column-center-main'>
+                  <Divider orientation="left">Your classrooms</Divider>
                     <List
                     className="demo-loadmore-list"
                     loading={initLoading}
@@ -96,7 +126,7 @@ const Main = () => {
                     )}
                     />
                 </div>
-                <div style={wrapperStyle} className = 'column-right'>
+                <div style={wrapperStyle} className = 'column-right-main'>
                     <Calendar fullscreen={false} /*onPanelChange={onPanelChange}*/ />
                 </div>
             </div>

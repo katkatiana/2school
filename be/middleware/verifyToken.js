@@ -22,7 +22,8 @@ permissionTable[info.TEACHER_CATEGORY_ID] = {
     'getClass'   : true,
     'getSubjects': true,
     'addHomeworkToClass' : true,
-    'deleteItem' : true
+    'deleteItem' : true,
+    'addReport'  : true
 };
 
 permissionTable[info.STUDENT_CATEGORY_ID] = {
@@ -33,6 +34,7 @@ permissionTable[info.STUDENT_CATEGORY_ID] = {
     'getClass'   : true,
     'addHomeworkToClass' : false,
     'deleteItem' : false,
+    'addReport'  : false
 };
 
 permissionTable[info.ADMIN_CATEGORY_ID] = {
@@ -42,7 +44,8 @@ permissionTable[info.ADMIN_CATEGORY_ID] = {
     'getClasses' : true,
     'getClass'   : true,
     'addHomeworkToClass' : true,
-    'deleteItem' : true
+    'deleteItem' : true,
+    'addReport'  : true
 };
 
 const verifyToken = async (req, res, next) => {
