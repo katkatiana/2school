@@ -27,6 +27,12 @@ permissionTable[info.TEACHER_CATEGORY_ID] = {
     'modifyItem' : true,
     'getAllUsers': false,
     'deleteUser' : false,
+    'createClass' : false,
+    'addUserToClass' : false,
+    'getReports' : true,
+    'getHomeworks' : true,
+    'createSubject' : false,
+    'addSubjectToTeacher' : false
 };
 
 permissionTable[info.STUDENT_CATEGORY_ID] = {
@@ -35,26 +41,40 @@ permissionTable[info.STUDENT_CATEGORY_ID] = {
     'modifyUser' : true,
     'getClasses' : true,
     'getClass'   : true,
+    'getSubjects': true,
     'addHomeworkToClass' : false,
     'deleteItem' : false,
     'addReport'  : false,
     'modifyItem' : false,
     'getAllUsers': false,
     'deleteUser' : false,
+    'createClass' : false,
+    'addUserToClass' : false,
+    'getReports' : true,
+    'getHomeworks' : true,
+    'createSubject' : false,
+    'addSubjectToTeacher' : false
 };
 
 permissionTable[info.ADMIN_CATEGORY_ID] = {
-    'signup'     : false,
+    'signup'     : true,
     'getUser'    : true,
     'modifyUser' : true,
     'getClasses' : true,
     'getClass'   : true,
+    'getSubjects': true,
     'addHomeworkToClass' : true,
     'deleteItem' : true,
     'addReport'  : true,
     'modifyItem' : true,
     'getAllUsers': true,
     'deleteUser' : true,
+    'createClass' : true,
+    'addUserToClass' : true,
+    'getReports' : true,
+    'getHomeworks' : true,
+    'createSubject' : true,
+    'addSubjectToTeacher' : true
 };
 
 const verifyToken = async (req, res, next) => {

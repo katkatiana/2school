@@ -20,11 +20,9 @@ const info = require('../utils/info');
 /******** Function Section  ****************************************************/
 
 router.post('/addReport/:classId', verifyToken, async (req, res) => {
-    const {
-        content,
-        teacherId,
-        studentId
-    } = req.body
+    const content = req.body.content;
+    const teacherId = req.body.teacherId;
+    const studentId = req.body.studentId;
 
     const {classId} = req.params;
     let newReport;
@@ -32,12 +30,18 @@ router.post('/addReport/:classId', verifyToken, async (req, res) => {
     try{
         const classObj = await ClassModel.findById(classId);
 
-   
-        newReport = {
+        if(studentId){
+            newReport = {
                 content: content,
                 teacherId : teacherId,
                 studentId : studentId,
-        };            
+            };
+        } else {
+            newReport = {
+                content: content,
+                teacherId : teacherId
+            };
+        }                    
     
         let newReportDb = new DisciplinaryFileModel(newReport);
         let reportSaveResult = await newReportDb.save();
@@ -59,5 +63,70 @@ router.post('/addReport/:classId', verifyToken, async (req, res) => {
     }
 })
 
+router.get('/getReports/:classId', verifyToken, async (req, res) => {
+    const {classId} = req.params; 
+    const userCategoryFromToken = req.authUserObjFromToken.userCategory;
+    const userIdFromToken = req.authUserObjFromToken.userId;
+
+    try{
+
+        if(!classId){
+            tools.sendResponse(res, 400, 'You must provide valid class Id.');
+        } else {
+            let classObj = await ClassModel.findById(classId)
+            .populate({
+                path: 'disciplinaryFileId',
+                populate: {
+                    path: "studentId",
+                    model: StudentModel
+                }                
+            })
+            .populate({
+                path: 'disciplinaryFileId',
+                populate: {
+                    path: "teacherId",
+                    model: TeacherModel
+                }               
+            })
+
+            
+
+            if(!classObj){
+                tools.sendResponse(res, 400, 'Specified class was not found.');
+            } else {
+                let disciplinaryFileArray = classObj.disciplinaryFileId;
+                let outputArray = [];
+
+                if(userCategoryFromToken === info.STUDENT_CATEGORY_ID ){
+                    disciplinaryFileArray.map(df => {
+                        let dfStudentId = df.studentId._id;
+
+                        if(dfStudentId && dfStudentId.toString().length > 0){ // report for the student
+                            if(dfStudentId.toString() === userIdFromToken.toString()){
+                                outputArray.push(df);
+                            }
+                        }
+                        
+                        if(dfStudentId && dfStudentId.toString().length === 0){ // report for the class
+                            outputArray.push(df);
+                        }                        
+                    });
+                } else {
+                    outputArray = disciplinaryFileArray;
+                }
+
+                tools.sendResponse(res, 200, "Disciplinary Reports fetched successfully", "payload", outputArray);
+            }
+        }
+
+    } catch (e) {
+        console.log(e);
+        if(e.message){
+            tools.sendResponse(res, 500, e.message);
+        } else {
+            tools.sendResponse(res, 500, 'Internal Server Error')
+        }        
+    } 
+});
 
 module.exports = router;

@@ -31,11 +31,11 @@
 
 @media screen and (max-width: 768px) {
 
-    .column-center{
+    .column-center-main{
         margin-inline-start: 40px!important;
     }
 
-    .column-right {
+    .column-right-main {
         display: none!important;
     }
 

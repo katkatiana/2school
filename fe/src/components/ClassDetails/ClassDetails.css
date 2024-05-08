@@ -49,8 +49,17 @@
 
 }
 
-.homework-list{
+/* .homework-list{
     display: flex;
     flex-wrap: wrap;
+} */
+
+
+.disciplinary-section{
+    display: flex;
 }
+.info-disciplinary{
+    display: inline;
+}
+
 

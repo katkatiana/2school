@@ -72,8 +72,6 @@ const validateHomework = async (req, res, next) => {
 
     // check that the subject is associated to that teacher
     if(teacherObj && subjectObj){
-        console.log(teacherObj)
-        console.log(subjectObj)
         teacherObj.subjectsId.map(sub => {
             if(sub._id.toString() === subjectObj._id.toString()){
                 subjectCheck = true;

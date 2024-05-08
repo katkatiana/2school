@@ -124,6 +124,13 @@ router.get('/getClass/:classId', verifyToken, async (req, res) => {
                                 model: SubjectModel
                             }
                         })
+                        .populate({
+                            path: 'homeworkId',
+                            populate: {
+                                path: "teacherId",
+                                model: TeacherModel
+                            }
+                        })
                         .populate('disciplinaryFileId')
                         .exec();
         if(!classObj){

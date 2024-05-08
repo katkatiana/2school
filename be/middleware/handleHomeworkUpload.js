@@ -28,13 +28,16 @@ const handleHomeworkUpload = async (req, res, next) => {
         // existing homework object update, so we must distinguish the two cases
         if(itemType){
             // this is the case of homework update
+            console.log("UPDATE");
             conditionToCheck = 
                 ((itemType === info.ITEM_TYPE_HOMEWORK) && (contentType.includes("multipart/form-data")))
         } else {
             // this is the case of homework first creation and upload
+            console.log("FIRST UPLOAD");
             conditionToCheck = (contentType.includes("multipart/form-data"));
         }
-
+        console.log(conditionToCheck);
+        console.log(contentType);
         if(conditionToCheck) 
         {
             const classId = req.query.classId;

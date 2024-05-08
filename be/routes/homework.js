@@ -13,6 +13,7 @@ const router = express.Router();
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
 const HomeworkModel = require('../models/homework');
+const SubjectModel = require('../models/subject');
 const ClassModel = require('../models/class');
 const tools = require('../utils/utils');
 const info = require('../utils/info');
@@ -84,6 +85,52 @@ router.post('/addHomeworkToClass', verifyToken, handleHomeworkUpload, validateHo
         tools.sendResponse(res, 500, e.message);        
     }
 })
+
+router.get('/getHomeworks/:classId', verifyToken, async (req, res) => {
+    const {classId} = req.params;
+
+    try{
+
+        if(!classId){
+            tools.sendResponse(res, 400, 'You must provide valid class Id.');
+        } else {
+            let classObj = await ClassModel.findById(classId)
+            .populate({
+                path: 'homeworkId',
+                populate: {
+                    path: "teacherId",
+                    model: TeacherModel
+                }                
+            })
+            .populate({
+                path: 'homeworkId',
+                populate: {
+                    path: "subjectId",
+                    model: SubjectModel
+                }               
+            });           
+
+            if(!classObj){
+                tools.sendResponse(res, 400, 'Specified class was not found.');
+            } else {
+                let homeworkArray = classObj.homeworkId;
+                let outputArray = [];
+
+                outputArray = homeworkArray;
+
+                tools.sendResponse(res, 200, "Homeworks fetched successfully", "payload", outputArray);
+            }
+        }
+
+    } catch (e) {
+        console.log(e);
+        if(e.message){
+            tools.sendResponse(res, 500, e.message);
+        } else {
+            tools.sendResponse(res, 500, 'Internal Server Error')
+        }        
+    }
+});
 
 module.exports = router;
 
