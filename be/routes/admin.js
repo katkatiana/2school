@@ -13,6 +13,7 @@ const router = express.Router();
 const TeacherModel = require('../models/teacher');
 const StudentModel = require('../models/student');
 const HomeworkModel = require('../models/homework');
+const SubjectModel = require('../models/subject');
 const ClassModel = require('../models/class');
 const DisciplinaryFileModel = require('../models/disciplinaryFile')
 const tools = require('../utils/utils');
@@ -28,6 +29,7 @@ router.get('/getAllUsers', verifyToken, async (req, res) => {
     
     const requestedUserCategory = req.query.category;
     let targetDbModel;
+    let userListFromDb;
     try{
 
         if(!requestedUserCategory){
@@ -41,8 +43,11 @@ router.get('/getAllUsers', verifyToken, async (req, res) => {
                 // not covered
                 throw new Error("Unrecognized category.")
             }
-    
-            let userListFromDb = await targetDbModel.find({});
+            if(requestedUserCategory.toString() === info.TEACHER_CATEGORY_ID.toString()){
+                userListFromDb = await targetDbModel.find({}).populate("subjectsId").exec();
+            } else {
+                userListFromDb = await targetDbModel.find({});
+            }            
     
             if(userListFromDb){
                 tools.sendResponse(res, 200, 'User List retrieved successfully', "payload", userListFromDb);    
@@ -245,11 +250,11 @@ router.post('/createSubject', verifyToken, async (req, res) => {
     let subjectName = req.query.subjectName;
 
     try{
-        if(!subjectName || subjectName.length > 0){
+        if(!subjectName || subjectName.length === 0){
             tools.sendResponse(res, 200, "You must provide a valid subject name."); 
         } else {
-            let checkSubject = SubjectModel.find({name : subjectName});
-            if(checkSubject){
+            let checkSubject = await SubjectModel.find({name : subjectName});
+            if(checkSubject.length > 0){
                 tools.sendResponse(res, 200, "Specified subject already exists."); 
             } else {
                 let newSubject = {name : subjectName};
@@ -268,25 +273,28 @@ router.post('/createSubject', verifyToken, async (req, res) => {
     }
 })
 
-router.put('/addSubjectToTeacher/:teacherId', verifyToken, async (req, res) => { 
+router.put('/addSubjectToTeacher', verifyToken, async (req, res) => { 
 
-    const subjectId = req.query.classId;
+    const subjectId = req.query.subjectId;
     const userId = req.query.teacherId;
 
     try{
 
-        if(!userId || !classId){
+        if(!userId || !subjectId){
             tools.sendResponse(res, 400, 'You must provide valid teacherId and subjectId.');
         } else {
-            let {user, userCategory} = tools.findUserCategory(userId);
+            let {user, userCategory} = await tools.findUserCategory(userId);
             let subjectFromDb = await SubjectModel.findById(subjectId);
+            console.log("USER:", user);
+            console.log("SUBJECT", subjectFromDb);
             if(!user || !subjectFromDb){
                 tools.sendResponse(res, 400, 'Specified user or subject was not found.');
             } else {
-                let arrayOfSubjectsFromTeacher = classFromDb["subjectsId"];
+                let arrayOfSubjectsFromTeacher = user.subjectsId;
                 arrayOfSubjectsFromTeacher.push(subjectId);
 
-                let paramToModify;
+                let paramToModify = {};
+                paramToModify["subjectsId"] = [];
                 paramToModify["subjectsId"] = arrayOfSubjectsFromTeacher;
 
                 let updateResult = await TeacherModel.findOneAndUpdate(
@@ -296,7 +304,7 @@ router.put('/addSubjectToTeacher/:teacherId', verifyToken, async (req, res) => {
                 );
 
                 if(updateResult){
-                    tools.sendResponse(res, 200, "Subject was added successfully", "payload", updateResult);
+                    tools.sendResponse(res, 200, "Subject was associated successfully", "payload", updateResult);
                 } else {
                     throw new Error("Cannot update specified teacher.");
                 }

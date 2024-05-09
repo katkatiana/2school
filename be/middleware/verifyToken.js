@@ -80,7 +80,7 @@ permissionTable[info.ADMIN_CATEGORY_ID] = {
 const verifyToken = async (req, res, next) => {
 
     let tokenHeader = req.headers['authorization'];
-
+    let expiredToken = false;
     try{
         if(!tokenHeader) {
             throw new Error ('Missing token.')
@@ -90,7 +90,8 @@ const verifyToken = async (req, res, next) => {
 
             if(Math.floor(new Date().getTime()/1000) >= decodedToken.exp){
                 console.log(Date.now())
-                throw new Error ('Access token is expired. Please login again.')
+                expiredToken = true;
+                throw new Error ('Access token is expired. You will be redirected to login.')
             } else {
                 if(decodedToken.userId) {
                     const {user, userCategory} = await tools.findUserCategory(decodedToken.userId);
@@ -129,7 +130,12 @@ const verifyToken = async (req, res, next) => {
         }
     } catch(e){
         console.log(e)
-        tools.sendResponse(res, 401, e.message);
+        if(expiredToken){
+            tools.sendResponse(res, 401, e.message, "tokenExpired", expiredToken);        
+        } else {
+            tools.sendResponse(res, 401, e.message);        
+        }
+        
     }
 }
 
