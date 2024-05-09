@@ -128,18 +128,18 @@ router.delete('/deleteUser/:userId', verifyToken, usertools.validateUserToDelete
     }
 })
 
-router.put('/createClass', verifyToken, async (req, res) => { 
+router.post('/createClass', verifyToken, async (req, res) => { 
 
-    const classSection = req.query.section;
-    const classGrade = req.query.grade;
-
+    const classSection = req.body.section;
+    const classGrade = req.body.grade;
+    console.log(req.body);
     try{
 
         let classSectionValidity = 
-            classSection && typeof(classSection) === "string" && classSection.length === 1;
+            classSection && classSection.length === 1;
 
         let classGradeValidity = 
-            classGrade && typeof(classGrade) === "number" && classGrade.toString().length === 1 && classGrade > 0 && classGrade < 6;
+            classGrade && classGrade.length === 1 && parseInt(classGrade, 10) > 0 && parseInt(classGrade, 10) < 6;
 
 
         if(!classSectionValidity || !classGradeValidity){
@@ -154,7 +154,7 @@ router.put('/createClass', verifyToken, async (req, res) => {
                 }
             )
 
-            if(dbObj){
+            if(dbObj.length > 0){
                 tools.sendResponse(res, 400, 'The specified class is already present in the database.');
             } else {
                 // calculate the logo to be used
@@ -176,7 +176,7 @@ router.put('/createClass', verifyToken, async (req, res) => {
                 let newClassDbSave = newClassDb.save({new: true});
 
                 if(newClassDbSave){
-                    tools.sendResponse(res, 200, "Class successfully created", "payload", newClassDbSave);
+                    tools.sendResponse(res, 200, "Class successfully created.", "payload", newClassDbSave);
                 } else {
                     throw new Error("Class was not saved correctly, please try again.")
                 }
