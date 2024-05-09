@@ -173,6 +173,17 @@ router.get('/getClass/:classId', verifyToken, async (req, res) => {
                 consistencyCheck = true;
             }
 
+            if(userCategory === info.STUDENT_CATEGORY_ID){
+                // student can only see himself in the class object
+                let studentsOfClass = classObj.studentsId;
+                studentsOfClass.map((st => {
+                    if(st._id.toString() !== userObjFromToken.userId.toString()){
+                        let elemIndex = studentsOfClass.indexOf(st);
+                        studentsOfClass.splice(elemIndex, 1);
+                    }
+                }))
+            }
+
             if(consistencyCheck){
                 tools.sendResponse(res, 200, "Data retrieved successfully", "payload", classObj)
             } else {
