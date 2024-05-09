@@ -89,12 +89,19 @@ const validateItemToModify = async (req, res, next) => {
     //check params to be modified based on item type
     if(itemType === info.ITEM_TYPE_HOMEWORK){
     
-        // homework can be modified either for content or attachment.
+        // homework can be modified either for content, attachment or subject.
         if(req.body.content){
             newContent = {
                 content : req.body.content
             };
             paramsToModify.push(newContent);
+        }
+
+        if(req.body.subjectId){
+            newSubject = {
+                subjectId : req.body.subjectId
+            }
+            paramsToModify.push(newSubject)
         }
 
         if(contentType.includes("multipart/form-data")){
@@ -218,8 +225,12 @@ const validateItemToModify = async (req, res, next) => {
                 // retrieve the existing file attachment, if present, and pass it next.
                 let cloudinaryAttachmentUrl = itemInDb.attachment;
                 if(cloudinaryAttachmentUrl){
-                    let publicIdOfExistingCloudinaryResource = cloudinaryAttachmentUrl.split('/').pop().split(".")[0];
-                    req.publicIdOfExistingCloudinaryResource = publicIdOfExistingCloudinaryResource;
+                    let publicIdOfCloudinaryResource = cloudinaryAttachmentUrl.split('/').pop().split(".")[0];
+                    let fileExtensionToDelete = cloudinaryAttachmentUrl.split('/').pop().split(".")[1];
+                    req.publicIdOfCloudinaryResource = publicIdOfCloudinaryResource;
+                    req.fileExtensionToDelete = fileExtensionToDelete;
+                    console.log(publicIdOfCloudinaryResource);
+                    console.log(fileExtensionToDelete);
                 }
             }
         } else {

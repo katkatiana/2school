@@ -9,11 +9,16 @@
 /******** Import Section  *******************************************************/
 
 import React, { useState } from 'react';
-import { executeNetworkOperation } from '../../utils/utils';
+import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import './SignupForm.css';
 import Navbar from '../Navbar/Navbar'
+import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID } from '../../utils/info';
+import { useNavigate } from 'react-router-dom';
 
 /******** Component Definition  *************************************************/
+
+const TEACHER_STRING = "Teacher";
+const STUDENT_STRING = "Student";
 
 /**
  * SignupForm
@@ -23,13 +28,15 @@ import Navbar from '../Navbar/Navbar'
  */
 const SignupForm = () => {
 
+    const navigate = useNavigate();
     const [signupForm, setSignupForm] = useState( 
         {   
             firstName: '',
             lastName: '',
             email: '', 
             password: '',
-            passwordConf: ''
+            passwordConf: '',
+            userCategory: 0
         }
     );
 
@@ -40,13 +47,27 @@ const SignupForm = () => {
  * @param ev Event object, which can be inspected for target, value, etc.
  */    
 const handleOnChange = (ev) => {
-    ev.preventDefault();
-    
+    ev.preventDefault();    
     const {name, value} = ev.target;
-    setSignupForm({
-        ...signupForm,
-        [name] : value 
-    })
+
+    if(ev.target.options){
+        let selectedUserCategory;
+        let selectText = ev.target.options[ev.target.selectedIndex].text;
+        if(selectText.toString() === TEACHER_STRING){
+            selectedUserCategory = TEACHER_CATEGORY_ID;
+        } else {
+            selectedUserCategory = STUDENT_CATEGORY_ID;
+        }
+        setSignupForm({
+            ...signupForm,
+            userCategory : selectedUserCategory 
+        })
+    } else {
+        setSignupForm({
+            ...signupForm,
+            [name] : value 
+        })
+    }
 }
 
 /**
@@ -77,7 +98,29 @@ const checkInput = () => {
         localErrorArray.push(errorMsg);
     }
 
+    if(signupForm.userCategory.length === 0) {
+        errorMsg = "You must specify a user category.";
+        localErrorArray.push(errorMsg);
+    } else {
+
+    }
+
     return localErrorArray;
+}
+
+const clearForm = () => {
+    setSignupForm(        {   
+        firstName: '',
+        lastName: '',
+        email: '', 
+        password: '',
+        passwordConf: '',
+        userCategory: 0
+    });
+    let select = document.getElementById("select-user-cat");
+    if(select){
+        select.value = "default";
+    }
 }
 
 /**
@@ -94,6 +137,7 @@ const checkInput = () => {
  */
  const handleOnSubmit = async (ev) => {
     ev.preventDefault()
+    let { token, decodedUser } = getAuthUserFromToken();
 
     let localErrorArray = checkInput()
     if(localErrorArray.length > 0) {
@@ -104,25 +148,32 @@ const checkInput = () => {
         alert(finalErrorMessage);
         localErrorArray  = [];
     } else{
-        let outputRes = await executeNetworkOperation(
-            'post',
-            '/createUser',
-            signupForm,
-            {
-                "Content-Type": 'multipart/form-data'
-            }
-        );
-
-        console.log(outputRes);
-        if(outputRes.status === 400) {
-            let finalErrorMessage = outputRes.data.message + "\n";
-                    outputRes.data.errors.map((errorMsg) => {
-                    finalErrorMessage += errorMsg;
-                });
-            alert(finalErrorMessage)
-        } else {
-            alert(outputRes.data.message)
-        }    
+        if(!token){
+            alert("Cannot retrieve user information. Please login again.")
+            navigate("/login");
+            } else {
+                let outputRes = await executeNetworkOperation(
+                    'post',
+                    '/signup',
+                    signupForm,
+                    buildAuthHeader(token)
+                );
+        
+                console.log(outputRes);
+                if(outputRes.status === 400) {
+                    let finalErrorMessage = outputRes.data.message + "\n";
+                            outputRes.data.errors.map((errorMsg) => {
+                            finalErrorMessage += errorMsg;
+                        });
+                    alert(finalErrorMessage)
+                } else {
+                    alert(outputRes.data.message)
+                    if(outputRes.data.tokenExpired){
+                        navigate("/login");
+                    }
+                }
+                clearForm();
+        } 
     }       
 } 
 
@@ -179,6 +230,13 @@ const checkInput = () => {
                             onChange = {handleOnChange}     
                             required 
                         />
+                    </div>
+                    <div className="form-group">
+                        <select id="select-user-cat" name="usercategory" onChange={handleOnChange}>
+                             <option value="teacher">{TEACHER_STRING}</option>
+                             <option value="student">{STUDENT_STRING}</option>
+                             <option value="default" disabled selected>Select user category</option>
+                        </select>                        
                     </div>
                     <div className = 'form-button'>
                         <button type="submit">Sign Up</button>

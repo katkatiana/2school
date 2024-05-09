@@ -118,7 +118,9 @@ const validateItemToDelete = async (req, res, next) => {
             let cloudinaryAttachmentUrl = itemInDb.attachment;
             if(cloudinaryAttachmentUrl){
                 let publicIdOfCloudinaryResource = cloudinaryAttachmentUrl.split('/').pop().split(".")[0];
+                let fileExtensionToDelete = cloudinaryAttachmentUrl.split('/').pop().split(".")[1];
                 req.publicIdOfCloudinaryResource = publicIdOfCloudinaryResource;
+                req.fileExtensionToDelete = fileExtensionToDelete;
             }
         }
         
@@ -126,8 +128,16 @@ const validateItemToDelete = async (req, res, next) => {
     }
 }
 
-const deleteContentByPublicId = async (publicId) => {
-    cloudinary.api.delete_resources_by_tag(publicId, {resource_type: "raw"})
+const deleteContentByPublicId = async (publicId, fileExtensionToDelete) => {
+    let resType;
+    if(fileExtensionToDelete.includes("png") || 
+       fileExtensionToDelete.includes("jpg")){
+        resType = {resource_type : "image"}
+       } else {
+        resType = {resource_type:"raw"};
+       }
+    console.log("DELETING RESOURCE...")
+    cloudinary.api.delete_resources_by_tag(publicId, resType)
     .then(result => console.log(result));
 }
 

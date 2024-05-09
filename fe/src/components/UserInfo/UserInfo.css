@@ -7,6 +7,7 @@ body {
 .container-userInfo {
     flex-direction: column;
     margin-block-start: 5%;
+    min-height: 100vh;
 }
 
 .user-info {

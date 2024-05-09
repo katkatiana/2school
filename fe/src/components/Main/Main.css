@@ -3,6 +3,7 @@
     width: 100%;
     gap: 5%;
     margin-block-start: 3%;
+    min-height: 100vh;
 }
 
 .column-center-main {

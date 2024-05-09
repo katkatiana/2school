@@ -112,6 +112,9 @@ const UserInfo = () => {
                 saveAuthToken(outputRes.headers.getAuthorization())
             } else {
                 alert(outputRes.data.message)
+                if(outputRes.data.tokenExpired){
+                    navigate("/login");
+                }
             }
         }        
     }
@@ -161,6 +164,9 @@ const UserInfo = () => {
                 )
 
                 alert(outputRes.data.message);
+                if(outputRes.data.tokenExpired){
+                    navigate("/login");
+                }
                 handleChangePassword()
                 setNewPassword("")
             } else {
@@ -201,7 +207,7 @@ const UserInfo = () => {
                 })
             } else {
                 alert(outputRes.data.message)
-                if(outputRes.data.statusCode === 401){
+                if(outputRes.data.tokenExpired){
                     navigate("/login");
                 }
             }            

@@ -30,7 +30,7 @@ router.patch('/modifyItem', verifyToken, handleHomeworkUpload, updatetools.valid
     const targetModelForModify = req.targetModelForModify; // added by validateItemToModify middleware
     const itemIdToUpdate = req.query.itemId.toString();
     const paramsToModify = req.paramsToModify; // added by validateItemToModify middleware
-
+    console.log("TO MODIFY:", paramsToModify);
     try{    
 
         let updateResult = await targetModelForModify.findOneAndUpdate(
@@ -40,10 +40,17 @@ router.patch('/modifyItem', verifyToken, handleHomeworkUpload, updatetools.valid
         );
 
         if(updateResult){
-            if(req.publicIdOfExistingCloudinaryResource){
+            if(req.publicIdOfCloudinaryResource){
                 // this means that the existing object already has another attachment that has been
                 // replaced, so we have to delete the old one from cloudinary.
-                await deletetools.deleteContentByPublicId(req.publicIdOfExistingCloudinaryResource);
+                
+                let publicIdOfCloudinaryResource = req.publicIdOfCloudinaryResource;
+                let fileExtensionToDelete = req.fileExtensionToDelete;
+                console.log("MI", publicIdOfCloudinaryResource);
+                console.log("MI", fileExtensionToDelete);
+                if(publicIdOfCloudinaryResource && fileExtensionToDelete){
+                    await deletetools.deleteContentByPublicId(publicIdOfCloudinaryResource, fileExtensionToDelete);
+                }
             }
             tools.sendResponse(res, 200, "Resource was updated successfully.", "updatedItem", updateResult); 
         } else {

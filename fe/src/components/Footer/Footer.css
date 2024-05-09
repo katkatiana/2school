@@ -1,14 +1,15 @@
 .footer {
-    position: fixed;
     left: 0;
     bottom: 0;
     height: 8%;
     width: 100%;
+    overflow: hidden;
     background-color: rgba(153, 182, 192, 0.356);
     color: black;
     text-align: center;
     font-size: smaller;
-
+    z-index: 9999;
+    margin-block-start: 2%;
   }
 
   .copyright{

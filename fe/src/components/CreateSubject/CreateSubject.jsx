@@ -9,7 +9,8 @@
 /******** Import Section  *******************************************************/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, List, Skeleton } from 'antd';
+import { Avatar, List, Skeleton, Divider } from 'antd';
+import { ReadOutlined } from '@ant-design/icons';
 import { Calendar, theme } from 'antd';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { INSTITUTE_NAME } from '../../utils/info';
@@ -30,10 +31,13 @@ import Button from 'react-bootstrap/Button';
  */
 const CreateSubject = () => {
 
+    const [initLoading, setInitLoading] = useState(true);
     const [subjectName, setSubjectName] = useState({name: ''});
     const navigate = useNavigate();
+    const [listOfSubjects, setListOfSubject] = useState([]);
 
     useEffect(() => {
+        getSubjects();
     }, []);
 
     const handleOnChange = (ev) => {
@@ -46,6 +50,29 @@ const CreateSubject = () => {
         })
     }
 
+    const getSubjects = async () => {
+        let { token, decodedUser } = getAuthUserFromToken();
+  
+        if(!token){
+          alert("Cannot retrieve user information. Please login again.")
+          navigate("/login");
+        } else {
+            let tokenUserId = decodedUser.userId;
+            let outputRes = await executeNetworkOperation ('get', `/getSubjects/${tokenUserId}`, "", buildAuthHeader(token))
+            console.log(outputRes)
+            if(outputRes.data.statusCode === 200) {
+              setInitLoading(false);
+              setListOfSubject(outputRes.data.payload);
+            } else {
+              alert(outputRes.data.message);
+              if(outputRes.data.tokenExpired){
+                navigate("/login");
+            }
+            }
+        }
+  
+      }
+
     const handleSubjectAdd = async (ev) => {
         ev.preventDefault();
         
@@ -57,23 +84,36 @@ const CreateSubject = () => {
               alert("Cannot retrieve user information. Please login again.")
               navigate("/login");
             } else {
-                let tokenUserId = decodedUser.userId;
-      
-                let outputRes = await executeNetworkOperation ('post', `/createSubject?subjectName=${subjectName}`, "", buildAuthHeader(token))
+                let tokenUserId = decodedUser.userId;      
+                let outputRes = await executeNetworkOperation ('post', `/createSubject?subjectName=${subjectName.name}`, "", buildAuthHeader(token))
                 console.log(outputRes)
                 alert(outputRes.data.message);
+                if(outputRes.data.tokenExpired){
+                    navigate("/login");
+                }
+                getSubjects();
             }      
         }
     }
 
     return (
         <>
+        <div>
+            <Divider orientation="left">Subjects</Divider>
+            <List
+            className="demo-loadmore-list"
+            loading={initLoading}
+            itemLayout="horizontal"
+            dataSource={listOfSubjects}
+            renderItem={(item) => <List.Item><ReadOutlined className='sub-icon' />{item.name}</List.Item>}
+            />
+        </div>
            <div className="">
                         <input 
                             type = "string" 
                             name = "name" 
                             placeholder = "Insert Subject Name here" 
-                            value = {subjectName}
+                            value = {subjectName.name}
                             onChange = {handleOnChange}    
                             required 
                         />

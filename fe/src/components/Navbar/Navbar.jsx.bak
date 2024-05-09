@@ -14,7 +14,6 @@ import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
-import { STUDENT_CATEGORY_ID, TEACHER_CATEGORY_ID } from "../../utils/info";
 
 
 /******** Component Definition  *************************************************/
@@ -81,18 +80,12 @@ const Navbar = () => {
 
     return(
         <nav className = "myNav">
-            <span className = "logo-img">
-                <a href = {"/homepage"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a>
-            </span>
+            <span className = "logo-img"><a href = {"/homepage"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a></span>
             {
               loggedIn ? <div className = "logged-nav"> <span className="welcome-msg"> Hi, {`${currentUserFullName}`}</span>
-                            <>
-                            {(decodedUser) && (decodedUser.userCategory === TEACHER_CATEGORY_ID || decodedUser.userCategory === STUDENT_CATEGORY_ID) ? 
                             <Tooltip title="Account Info">
                                 <Button type="primary" shape="round" icon={<UserOutlined />} size={size} onClick={(e) => navigate("/userDetail")} className = "nav-buttons" />
-                            </Tooltip> : ""
-                            }
-                            </>
+                            </Tooltip>
                             <Tooltip title="Logout">
                                 <Button type="primary" shape="round" icon={<LogoutOutlined />} size={size}  onClick = {handleLogout} className = "nav-buttons" /> 
                             </Tooltip>

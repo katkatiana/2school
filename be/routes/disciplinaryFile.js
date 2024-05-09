@@ -99,15 +99,14 @@ router.get('/getReports/:classId', verifyToken, async (req, res) => {
 
                 if(userCategoryFromToken === info.STUDENT_CATEGORY_ID ){
                     disciplinaryFileArray.map(df => {
-                        let dfStudentId = df.studentId._id;
 
-                        if(dfStudentId && dfStudentId.toString().length > 0){ // report for the student
-                            if(dfStudentId.toString() === userIdFromToken.toString()){
+                        if(df.studentId && df.studentId._id && df.studentId._id.toString().length > 0){ // report for the student
+                            if(df.studentId._id.toString() === userIdFromToken.toString()){
                                 outputArray.push(df);
                             }
                         }
                         
-                        if(dfStudentId && dfStudentId.toString().length === 0){ // report for the class
+                        if(!df.studentId){ // report for the class
                             outputArray.push(df);
                         }                        
                     });

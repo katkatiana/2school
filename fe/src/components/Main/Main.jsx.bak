@@ -79,9 +79,6 @@ const Main = () => {
             }
           } else {
             alert(outputRes.data.message);
-            if(outputRes.data.tokenExpired){
-              navigate("/login");
-            }
           }
       }
     }
@@ -101,9 +98,6 @@ const Main = () => {
             setListOfSubject(outputRes.data.payload);
           } else {
             alert(outputRes.data.message);
-            if(outputRes.data.tokenExpired){
-              navigate("/login");
-            }
           }
       }
 

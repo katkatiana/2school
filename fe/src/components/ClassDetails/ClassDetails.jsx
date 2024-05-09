@@ -16,8 +16,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Table, Button, Card, List, Tooltip, Modal, Dropdown, Typography } from 'antd';
 import { Checkbox } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, InfoOutlined, CheckOutlined } from '@ant-design/icons';
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { DownOutlined, SmileOutlined, FileOutlined } from '@ant-design/icons';
 import { Select, Space } from 'antd';
+import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID } from '../../utils/info';
 
 /******** Component Definition  *************************************************/
 
@@ -35,6 +36,7 @@ const ClassDetails = () => {
     const [listOfSubjects, setListOfSubjects] = useState([]);
     const [isClickedDisciplinary, setIsClickedDisciplinary] = useState(false);
     const [isModalHomeworkOpen, setIsModalHomeworkOpen] = useState(false);
+    const [isModalHomeworkModifyOpen, setIsModalHomeworkModifyOpen] = useState(false);
     const [isModalDisciplinaryFileOpen, setIsModalDisciplinaryFileOpen] = useState(false);
     const [selectedKey, setSelectedKey] = useState(null)
     const navigate = useNavigate();
@@ -43,6 +45,7 @@ const ClassDetails = () => {
     const [currentUploadedFile, setCurrentUploadedFile] = useState({});
     const [currentSelectedSubject, setCurrentSelectedSubject] = useState({label: '', value: ''});
     const [currentHomeworkText, setCurrentHomeworkText] = useState();
+    const [currentHomeworkItemId, setCurrentHomeworkItemId] = useState("");
     const [tableData, setTableData] = useState([]);
     const [homeworkData, setHomeworkData] = useState([]);
     const [rowSelection, setRowSelection] = useState({});
@@ -50,6 +53,7 @@ const ClassDetails = () => {
     const [currentSelectedRow, setCurrentSelectedRow] = useState({});
     const [disciplinaryReportList, setDisciplinaryReportList] = useState([]);
     const [disciplinaryReportId, setDisciplinaryReportId] = useState();
+    const [currentUserCategory, setCurrentUserCategory] = useState();
     const [newHomework, setNewHomework] = useState(
       {
         subject: '',
@@ -135,16 +139,20 @@ const ClassDetails = () => {
               })
               setTableData(localData);
               //setHomeworkData(outputRes.data.payload.homeworkId);
-              console.log(outputRes.data.payload.homeworkId)
-              outputRes.data.payload.homeworkId.map(hw => {
-                localHomeworkData.push({
-                  title: hw.subjectId.name,
-                  content: hw.content,
-                  teacher: hw.teacherId.firstName + " " + hw.teacherId.lastName,
-                  attachment: hw.attachment || ""
-                });                
-              })
-              setHomeworkData(localHomeworkData);
+              // console.log(outputRes.data.payload.homeworkId)
+              // outputRes.data.payload.homeworkId.map(hw => {
+              //   localHomeworkData.push({
+              //     id: hw._id,
+              //     title: hw.subjectId.name,
+              //     subjectId: hw.subjectId._id,
+              //     content: hw.content,
+              //     teacher: hw.teacherId.firstName + " " + hw.teacherId.lastName,
+              //     attachment: hw.attachment || "",
+              //     isEditing : false
+              //   });                
+              // })
+              // console.log("LHD", localHomeworkData);
+              // setHomeworkData(localHomeworkData);
               //console.log(data.studentsId[0].firstName)
               
             } else {
@@ -176,8 +184,22 @@ const ClassDetails = () => {
       setIsModalHomeworkOpen(true);     
     };
 
+    const showModalModifyHomework = () => {
+      setIsModalHomeworkModifyOpen(true);     
+    };
+
+    const handleCancelModifyHomework = () => {
+      setIsModalHomeworkModifyOpen(false);
+      setCurrentHomeworkText("");
+      setCurrentSelectedSubject({label: '', value: ''})
+      setCurrentUploadedFile({});
+      if(document.getElementById('attachment-mod')){
+        document.getElementById('attachment-mod').value= null;
+      }
+    };
+
     const handleOkHomework = async () => {
-      
+
       if(currentSelectedSubject.label.length === 0){
         alert("Select a subject before uploading new homework.")
       } else {
@@ -189,10 +211,12 @@ const ClassDetails = () => {
         reqBody["subjectId"] = currentSelectedSubject.value;
         reqBody["teacherId"] = decodedUser.userId;
 
-        if(Object.keys(currentUploadedFile) > 0){
+        if(currentUploadedFile.name){
+          console.log("MULTIPART")
           headers["Content-Type"] = "multipart/form-data";
           reqBody["attachment"] = currentUploadedFile;
         } else {
+          console.log("JSON")
           headers["Content-Type"] = "application/json";
         }
 
@@ -205,10 +229,18 @@ const ClassDetails = () => {
         } else {
           
           let mergedHeaders = {...headers, ...buildAuthHeader(token)};
-
+          let targetURL;
+          let targetMethod;
+          if(currentHomeworkItemId){
+            targetMethod = 'patch'
+            targetURL = `/modifyItem?classId=${id}&itemId=${currentHomeworkItemId}&itemType=homework`;
+          } else {
+            targetMethod = 'post'
+            targetURL = `/addHomeworkToClass?classId=${id}`;
+          }
           let outputRes = await executeNetworkOperation (
-            'post', 
-            `/addHomeworkToClass?classId=${id}`, 
+            targetMethod, 
+            targetURL,
             reqBody, 
             mergedHeaders
           );
@@ -217,10 +249,14 @@ const ClassDetails = () => {
           setCurrentHomeworkText("");
           setCurrentSelectedSubject({label: '', value: ''})
           setCurrentUploadedFile({});
-          document.getElementById('attachment').value= null;
+          setCurrentHomeworkItemId("");
+          if(document.getElementById('attachment-mod')){
+            document.getElementById('attachment-mod').value= null;
+          }
         }
       }      
       setIsModalHomeworkOpen(false);
+      setIsModalHomeworkModifyOpen(false);
     }
 
     const handleCancelHomework = () => {
@@ -228,7 +264,13 @@ const ClassDetails = () => {
       setCurrentHomeworkText("");
       setCurrentSelectedSubject({label: '', value: ''})
       setCurrentUploadedFile({});
-      document.getElementById('attachment').value= null;
+      setCurrentHomeworkItemId("");
+      if(document.getElementById('attachment-mod')){
+        document.getElementById('attachment-mod').value= null;
+      }
+      if(document.getElementById('attachment')){
+        document.getElementById('attachment').value= null;
+      }
     };
 
     const handleOnChangeHmwk = (ev) => {
@@ -303,6 +345,7 @@ const ClassDetails = () => {
       
     }
 
+
     const getReports = async () => {
       let { token, decodedUser } = getAuthUserFromToken();
         console.log("decoded", decodedUser)
@@ -354,18 +397,52 @@ const ClassDetails = () => {
               let localHomeworkData = [];
               outputRes.data.payload.map(hw => {
                 localHomeworkData.push({
+                  id: hw._id,
                   title: hw.subjectId.name,
+                  subjectId: hw.subjectId._id,
                   content: hw.content,
                   teacher: hw.teacherId.firstName + " " + hw.teacherId.lastName,
-                  attachment: hw.attachment || ""
+                  attachment: hw.attachment || "",
+                  isEditing : false
                 });                
               })
               setHomeworkData(localHomeworkData);
-
+              console.log(localHomeworkData);
             } else {
               alert(outputRes.data.message + "\n Please, try again.");
             }
         }
+    }
+
+    const handleDeleteHmwk = async (item) => {
+      let { token } = getAuthUserFromToken();
+
+
+      let outputRes = await executeNetworkOperation (
+        'delete', 
+        `/deleteItem?itemId=${item.id}&classId=${id}&itemType=homework`, 
+        "", 
+        buildAuthHeader(token)
+      )
+      alert(outputRes.data.message)
+      getHomeworks();
+    }
+
+    const handleIsEditingHmwk = async (item) => {
+        showModalModifyHomework(true);
+        setCurrentHomeworkItemId(item.id);
+        setCurrentSelectedSubject({label: item.title, value: item.subjectId});
+        setCurrentHomeworkText(item.content);
+        if(item.attachment.length > 0){
+          setCurrentUploadedFile(item.attachment);
+        } else {
+          setCurrentUploadedFile("");
+        }
+        let index = homeworkData.indexOf(item);
+        let tempArray = Array.from(homeworkData);
+        tempArray[index].isEditing = !tempArray[index].isEditing;
+        setHomeworkData(tempArray);
+        
     }
 
     const addNewDisciplinaryReport = async () => {
@@ -423,7 +500,7 @@ const ClassDetails = () => {
       setRowSelection({
         onChange: (selectedRowKeys, selectedRows) => {
           console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-          setCurrentSelectedRow(selectedRows[selectedRowKeys]);
+          setCurrentSelectedRow(selectedRows[0]);
         },
         getCheckboxProps: (record) => ({
           disabled: record.name === 'Disabled User',
@@ -431,9 +508,16 @@ const ClassDetails = () => {
           name: record.name,
         }),
       });
+      let { token, decodedUser } = getAuthUserFromToken();
+      setCurrentUserCategory(decodedUser.userCategory);
       getClassDetails();
       getReports();
-      getSubjects();
+      if(decodedUser.userCategory === TEACHER_CATEGORY_ID){
+        getSubjects();
+      } else {
+        // get Teachers
+      }      
+      getHomeworks();
     }, []);   
 
        return(
@@ -462,7 +546,7 @@ const ClassDetails = () => {
                 </Button>
                 {
                   isClickedHmwk ?  
-                                <div> 
+                                <div>                        
                                   <Tooltip title="Add">
                                     <Button shape="circle" icon={<PlusOutlined />} onClick={showModalHomework} />
                                   </Tooltip>
@@ -504,8 +588,49 @@ const ClassDetails = () => {
                                           <p>Author: {item.teacher}</p>                                         
                                           <p>{item.content}</p>
                                           {
-                                            item.attachment ? <a href={item.attachment} target="_blank">See attachment</a> : ""
+                                            item.attachment.length > 0 ? <a href={item.attachment} target="_blank"><FileOutlined />See attachment</a> : ""
                                           }
+                                          <Button 
+                                            shape="circle" 
+                                            icon= {<EditOutlined />}
+
+                                            className='dis-icon-buttons' 
+                                            onClick={e => handleIsEditingHmwk(item)}
+                                          />
+                                          <Modal title="Modify Homework" open={isModalHomeworkModifyOpen} onOk={handleOkHomework} onCancel={handleCancelModifyHomework}>
+                                            <Select
+                                              onChange={handleHomeworkSelect}
+                                              defaultValue="Select.."
+                                              style={{
+                                                width: 120,
+                                              }}
+                                              options={listOfSubjects}
+                                              value={currentSelectedSubject}
+                                            />
+                                              <textarea 
+                                                type="text"
+                                                name = 'content'
+                                                value={currentHomeworkText} 
+                                                placeholder='Write here your homework...'
+                                                onChange={handleOnChangeHmwk}
+                                              />
+                                              <input 
+                                                type="file" 
+                                                id="attachment-mod"
+                                                name="attachment"
+                                                accept="*"
+                                                onChange={handleUploadedHomeworkFile}
+                                              />
+                                              {
+                                                currentUploadedFile.length > 0 ? <p><a href={item.attachment} target="_blank"><FileOutlined />Attachment</a> is present</p>: <p>Attachment not present</p>
+                                              }
+                                          </Modal>
+                                          <Button 
+                                            shape="circle" 
+                                            icon={<DeleteOutlined />} 
+                                            onClick={e => handleDeleteHmwk(item)}
+                                            className='dis-icon-buttons' 
+                                          />
                                           </Card>
                                       </List.Item>
                                     )}
@@ -515,7 +640,7 @@ const ClassDetails = () => {
               </div>
               <div>
                 <div className='disciplinary-section'>
-                <Tooltip title="To add a report to a student, you need to select them first. Else, it will be added to the entire class.">
+                <Tooltip title="To add a report to a student, you need to select them first. Otherwise, it will be added to the entire class.">
                   <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
                 </Tooltip>
                   <Button 
@@ -523,7 +648,7 @@ const ClassDetails = () => {
                     className='disciplinary-button'
                     onClick={handleDisciplinary}
                   >
-                    Disciplinary report
+                    Disciplinary Report
                   </Button>
                   </div>
                 {
@@ -544,6 +669,7 @@ const ClassDetails = () => {
                                                 placeholder='Write here your report...'
                                                 onChange={handleOnChangeDisciplinaryReport}
                                               />
+                                              
                                             </Modal>
                                             <List
                                               className='list-disciplinary'

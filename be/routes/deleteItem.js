@@ -33,7 +33,10 @@ router.delete('/deleteItem', verifyToken, deletetools.validateItemToDelete, asyn
         // homeworks can have attachments. Check if it exists and, if yes, delete it.
         if(itemType === info.ITEM_TYPE_HOMEWORK){
             let publicIdOfCloudinaryResource = req.publicIdOfCloudinaryResource;
-            await deletetools.deleteContentByPublicId(publicIdOfCloudinaryResource);
+            let fileExtensionToDelete = req.fileExtensionToDelete;
+            if(publicIdOfCloudinaryResource && fileExtensionToDelete){
+                await deletetools.deleteContentByPublicId(publicIdOfCloudinaryResource, fileExtensionToDelete);
+            }            
         }
         // delete the object from db
         const deleteResult = await targetModelForDeletion.findByIdAndDelete(itemIdToDelete);

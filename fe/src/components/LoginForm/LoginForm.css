@@ -83,6 +83,11 @@ button:hover {
     margin-inline-end: 8px;
 }
 
+.btn-submit-shape{
+    overflow: hidden;
+    border-radius: 12px;
+}
+
 @media screen and (max-width: 768px) {
 
     .login-container{

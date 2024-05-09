@@ -74,9 +74,6 @@ const LoginForm = () => {
             } else {
                 alert(outputRes.data.message)
             }
-            if(outputRes.data.tokenExpired){
-                navigate("/login");
-            }
         }
     }
 

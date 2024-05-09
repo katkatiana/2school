@@ -8,6 +8,7 @@
 
 /******** Import Section  *******************************************************/
 import React, { useState, useEffect } from 'react';
+import './AdminPanel.css';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, List, Skeleton } from 'antd';
 import { Calendar, theme } from 'antd';
@@ -36,32 +37,38 @@ const AdminPanel = () => {
     }, []);
 
     return (
-        <>
+        <div className='container-admin'>
            <button 
             type = 'button'
-            onClick = {e => navigate(e, "/signup")}
+            onClick = {e => navigate("/signup")}
             > Create New User </button>
             <button 
                 type = 'button'
-                onClick = {e => navigate(e, "/createSubject")}
+                onClick = {e => navigate("/createSubject")}
             > Create New Subject </button>
-            <button 
+            <button
+                disabled
+                style={{backgroundColor:'#3c3c3c'}}
                 type = 'button'
-                onClick = {e => navigate(e, "/createClass")}
+                onClick = {e => navigate("/createClass")}
             > Create New Class </button>
             <button 
+                disabled
+                style={{backgroundColor:'#3c3c3c'}}
                 type = 'button'
-                onClick = {e => navigate(e, "/addUserToClass")}
+                onClick = {e => navigate("/addUserToClass")}
             > Add User to Class </button>
             <button 
                 type = 'button'
-                onClick = {e => navigate(e, "/addSubjectToTeacher")}
+                onClick = {e => navigate("/addSubjectToTeacher")}
             > Add Subject to Teacher </button>
             <button 
+                disabled
+                style={{backgroundColor:'#3c3c3c'}}
                 type = 'button'
-                onClick = {e => navigate(e, "/modifyDeleteUser")}
+                onClick = {e => navigate("/modifyDeleteUser")}
             > Modify/Delete User </button>
-        </>
+        </div>
       );
 }
 

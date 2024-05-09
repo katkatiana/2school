@@ -1,11 +1,12 @@
 .container-class-details{
     display: flex;
     width: 100%;
+    min-height: 100vh;
 }
 
 .column-center-detailed {
     flex-grow: 1;
-    width: 60%;
+    width: 50%;
     margin: 0;
     padding-block-start: 3%;
 }
@@ -22,7 +23,7 @@
 } 
 
 .ant-table-content{
-    width: 50%;
+    width: 80%;
 }
 
 .ant-table-selection-column{
@@ -33,7 +34,7 @@
 .disciplinary-button{
     display: flex;
     justify-content: center;
-    margin-inline-end: 550px;
+    padding-inline: 100px;
     background-color: rgba(15, 191, 15, 0.768);
     color: white;
     transition-duration: 0.4s;
@@ -62,4 +63,12 @@
     display: inline;
 }
 
+@media screen and (max-width: 768px) {
 
+    .homework-button,
+    .disciplinary-button{
+        margin-inline-end: 50px;
+        width: 60%;
+    }
+
+}

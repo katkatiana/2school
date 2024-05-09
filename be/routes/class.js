@@ -22,18 +22,18 @@ const info = require('../utils/info');
 /** GET Methods */
 /**
  * @openapi
- * '/getClasses/:teacherId':
+ * '/getClasses/:userId':
  *  get:
  *     tags:
- *     - Get Teacher classrooms IDs
- *     summary: Retrieve all the classroom IDs of the classes that are associated to a given teacher, specified by teacherId.
+ *     - Get User classrooms IDs
+ *     summary: Retrieve all the classroom IDs of the classes that are associated to a given user, specified by userId.
  *     parameters:
  *       - in: path
- *         name: teacherId
+ *         name: userId
  *         schema:
  *         type: string
  *         required: true
- *         description: Alphanumeric ID of the teacher
+ *         description: Alphanumeric ID of the user
  *     security:
  *      - bearerAuth: []
  *     responses:
@@ -44,38 +44,55 @@ const info = require('../utils/info');
  *      500:
  *        description: Internal Server Error.
  */
-router.get('/getClasses/:teacherId', verifyToken, async (req, res) => {
-    const { teacherId } = req.params;
+router.get('/getClasses/:userId', verifyToken, async (req, res) => {
+    const { userId } = req.params;
     try{
-        const teacherObj = await TeacherModel.findById(teacherId);
-        if(!teacherObj){
-            tools.sendResponse(res, 404, "Specified teacher was not found.")
-        } else {
-            const classes = await ClassModel.find(
+        const userFromToken = req.authUserObjFromToken;
+        let classes;
+        if(userFromToken.userCategory === info.TEACHER_CATEGORY_ID){
+            classes = await ClassModel.find(
                 {
                     teachersId: {
-                        $elemMatch: { $eq: teacherId }
+                        $elemMatch: { $eq: userId }
                     }
                 }
             )
-        
-            let classOutputArray = [];
-        
-            if(classes.length > 0){
-                classes.map(singleClass => {
-                    let classOutputItem = {
-                        _id : singleClass._id,
-                        section: singleClass.section,
-                        gradeOfClass: singleClass.gradeOfClass,
-                        logo: singleClass.logo
+        } else if(userFromToken.userCategory === info.STUDENT_CATEGORY_ID){
+            classes = await ClassModel.find(
+                {
+                    studentsId: {
+                        $elemMatch: { $eq: userId }
                     }
-                    classOutputArray.push(classOutputItem);
-                });
-                console.log(classOutputArray);
-            } 
-                
-            tools.sendResponse(res, 200, "Completed successfully.", "payload", classOutputArray)
+                }
+            ).populate({
+                path: 'teachersId',
+                populate: {
+                    path: "subjectsId",
+                    model: SubjectModel
+                }                
+            }).exec();         
+        } else {
+            classes = await ClassModel.find({});
         }
+        
+        let classOutputArray = [];
+    
+        if(classes.length > 0){
+            classes.map(singleClass => {
+                let classOutputItem = {
+                    _id : singleClass._id,
+                    section: singleClass.section,
+                    gradeOfClass: singleClass.gradeOfClass,
+                    logo: singleClass.logo,
+                    teachers: singleClass.teachersId
+                }
+                classOutputArray.push(classOutputItem);
+            });
+            console.log(classOutputArray);
+        } 
+            
+        tools.sendResponse(res, 200, "Completed successfully.", "payload", classOutputArray)
+        
     } catch (e) {
         console.log(e)
         tools.sendResponse(res, 500, "Internal Server Error."); 

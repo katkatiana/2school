@@ -9,9 +9,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from './pages/LoginPage.jsx';
 import NotFound from './pages/NotFound.jsx';
-import CreateSubjectPage from './pages/CreateSubjectPage.jsx';
-import CreateClassPage from './pages/CreateClassPage.jsx';
-import AddSubjectToTeacherPage from "./pages/AddSubjectToTeacherPage.jsx";
 import Unauthorized from './pages/Unauthorized.jsx'
 import LoginSuccess from './pages/LoginSuccess.jsx';
 import SignupForm from "./components/SignupForm/SignupForm.jsx";
@@ -52,9 +49,7 @@ function App() {
           <Route element = { <ProtectedRoutes allowedRoles={[ADMIN_CATEGORY_ID]}/>} >
             <Route path = '/adminPage' element = {<AdminPage /> } />
             <Route path = '/signup' element = {<SignupForm /> } />
-            <Route path = '/createSubject' element = {<CreateSubjectPage /> } />
-            <Route path = '/createClass' element = {<CreateClassPage /> } />
-            <Route path = '/addSubjectToTeacher' element = {<AddSubjectToTeacherPage /> } />
+            <Route path = '/createSubject' element = {<CreateSubject /> } />
           </Route>          
         </Routes>
       </BrowserRouter>
