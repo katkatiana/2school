@@ -29,7 +29,7 @@ router.get('/getAllUsers', verifyToken, async (req, res) => {
     
     const requestedUserCategory = req.query.category;
     let targetDbModel;
-    let userListFromDb;
+    let userListFromDb = [];
     try{
 
         if(!requestedUserCategory){
@@ -39,16 +39,26 @@ router.get('/getAllUsers', verifyToken, async (req, res) => {
                 targetDbModel = TeacherModel;
             } else if(requestedUserCategory.toString() === info.STUDENT_CATEGORY_ID.toString()){
                 targetDbModel = StudentModel;
+            } else if(requestedUserCategory === "all"){
+                targetDbModel = [];
+                targetDbModel.push(TeacherModel);
+                targetDbModel.push(StudentModel);
             } else {
                 // not covered
                 throw new Error("Unrecognized category.")
             }
+
             if(requestedUserCategory.toString() === info.TEACHER_CATEGORY_ID.toString()){
                 userListFromDb = await targetDbModel.find({}).populate("subjectsId").exec();
-            } else {
+            } else if(requestedUserCategory === "all"){
+                let localListOfTeachers = await TeacherModel.find({});
+                let localListOfStudents = await StudentModel.find({});
+                userListFromDb = localListOfTeachers.concat(localListOfStudents);
+            } else {                
                 userListFromDb = await targetDbModel.find({});
-            }            
-    
+            }
+
+            console.log("USERLIST FINAL", userListFromDb);
             if(userListFromDb){
                 tools.sendResponse(res, 200, 'User List retrieved successfully', "payload", userListFromDb);    
             } else {
@@ -192,21 +202,25 @@ router.post('/createClass', verifyToken, async (req, res) => {
     }
 });
 
-router.put('/addUserToClass/:userId', verifyToken, async (req, res) => { 
+router.put('/addUserToClass', verifyToken, async (req, res) => { 
 
     const classId = req.query.classId;
     const userId = req.query.userId;
-
+    console.log("CLASS:", classId);
+    console.log("USER", userId);
     try{
 
         if(!userId || !classId){
             tools.sendResponse(res, 400, 'You must provide valid userId and classId.');
         } else {
-            let {user, userCategory} = tools.findUserCategory(userId);
-            let classFromDb = await ClassModel.findById(classId);
+            let {user, userCategory} = await tools.findUserCategory(userId);
+            let classFromDb = await ClassModel.find({_id : classId}).populate('studentsId').exec();
+            console.log("USerFromDb", user)
+            console.log("ClassFromDb", classFromDb)
             if(!user || !classFromDb){
                 tools.sendResponse(res, 400, 'Specified user or class was not found.');
             } else {
+                classFromDb = classFromDb[0];
                 if(userCategory === info.TEACHER_CATEGORY_ID){
                     propertyName = "teachersId";
                 } else if(userCategory === info.STUDENT_CATEGORY_ID){
@@ -215,11 +229,10 @@ router.put('/addUserToClass/:userId', verifyToken, async (req, res) => {
                     console.log("Not possible!")
                     // not possible
                 }
-
-                let arrayOfClass = classFromDb[propertyName];
+                let arrayOfClass = classFromDb[propertyName];                
                 arrayOfClass.push(userId);
 
-                let paramToModify;
+                let paramToModify = {};
                 paramToModify[propertyName] = arrayOfClass;
 
                 let updateResult = await ClassModel.findOneAndUpdate(

@@ -72,7 +72,10 @@ router.get('/getClasses/:userId', verifyToken, async (req, res) => {
                 }                
             }).exec();         
         } else {
-            classes = await ClassModel.find({});
+            classes = await ClassModel.find({})
+            .populate("teachersId")
+            .populate("studentsId")
+            .exec();
         }
         
         let classOutputArray = [];
@@ -84,7 +87,8 @@ router.get('/getClasses/:userId', verifyToken, async (req, res) => {
                     section: singleClass.section,
                     gradeOfClass: singleClass.gradeOfClass,
                     logo: singleClass.logo,
-                    teachers: singleClass.teachersId
+                    teachers: singleClass.teachersId,
+                    students: singleClass.studentsId
                 }
                 classOutputArray.push(classOutputItem);
             });
