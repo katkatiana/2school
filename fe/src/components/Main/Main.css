@@ -24,6 +24,7 @@
 
 .column-right-main{
     margin-block-start: 2%;
+    height: fit-content;
 }
 
 .sub-icon {

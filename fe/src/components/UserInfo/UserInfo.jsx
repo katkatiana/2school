@@ -9,12 +9,12 @@
 /******** Import Section  *******************************************************/
 import React, { useState, useEffect } from 'react';
 import { executeNetworkOperation, getAuthUserFromToken, buildAuthHeader, saveAuthToken } from '../../utils/utils';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import './UserInfo.css';
-import Navbar from '../Navbar/Navbar'
 import * as icons from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import { DownloadOutlined } from '@ant-design/icons';
+import { Button } from 'antd';
 
 /******** Component Definition  *************************************************/
 /**
@@ -31,6 +31,7 @@ const UserInfo = () => {
     const [show, setShow] = useState(false);
     const [selectedUrl, setSelectedUrl] = useState("");
     const [isClicked, setIsClicked] = useState(false);
+    const [size, setSize] = useState('large');
     const [newPassword, setNewPassword] = useState("");
     const [currentUser, setCurrentUser] = useState({
         firstName : "",
@@ -267,19 +268,23 @@ const UserInfo = () => {
                 
                 {
                         isClicked ?    
-                            <div>
+                            <div className = 'change-psw-section'>
                                 <input 
                                     type = 'password' 
                                     placeholder = 'Insert your new password'
+                                    className = 'input-change-psw'
                                     onChange = {handleInputPswdChange}
                                 >
                                     </input> 
-                                    <button 
-                                        type = 'submit'
+                                    <Button 
+                                        type = "primary" 
+                                        shape = "round" 
+                                        size = {size}  
+                                        className = 'button-password'
                                         onClick = {handleSaveNewPassword}
                                     >
                                         Save changes
-                                    </button>
+                                    </Button>
                                 </div>
                         : ""
                     }
@@ -314,11 +319,8 @@ const UserInfo = () => {
                         >
                             Close
                         </Button>
-                        <Button 
-                            variant="primary" 
-                            onClick={handleModifiedPropic}
-                        >
-                            Save Changes
+                        <Button type="primary" shape="round" size={size} onClick={handleModifiedPropic}>
+                            Save changes
                         </Button>
                         </Modal.Footer>
                     </Modal>

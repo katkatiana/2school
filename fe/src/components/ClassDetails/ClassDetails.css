@@ -35,30 +35,32 @@
     display: flex;
     justify-content: center;
     padding-inline: 100px;
-    background-color: rgba(15, 191, 15, 0.768);
+    background-color: rgba(15, 191, 15, 0.768)!important;
     color: white;
     transition-duration: 0.4s;
     width: 20%;
 }
 
 .disciplinary-button{
-    background-color: tomato;
+    background-color: tomato!important;
 }
 
 .homework-button:hover{
-    background-color: rgba(8, 152, 8, 0.768);
-
+    background-color: rgba(8, 152, 8, 0.768)!important;
+    color: white!important;
 }
 
-/* .homework-list{
-    display: flex;
-    flex-wrap: wrap;
-} */
-
+.disciplinary-button:hover{
+    background-color: rgb(217, 56, 56)!important;
+    color: white!important;
+}
 
 .disciplinary-section{
     display: flex;
+    margin-inline-start: 3%;
+    margin-block-start: 5%;
 }
+
 .info-disciplinary{
     display: inline;
 }

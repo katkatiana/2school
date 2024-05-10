@@ -63,10 +63,15 @@ span {
     background-color: rgb(233, 126, 22);
 }
 
+.button-pswd button:hover {
+    background-color: rgb(255, 136, 0)!important;
+}
+
 .user-propic{
     width: 25%;
     height: 25%;
     aspect-ratio: 1/1;
+    object-fit: cover;
 }
 
 .selected-propic{
@@ -79,6 +84,10 @@ span {
     
 }
 
+label[for = "email"]{
+    margin-inline-end: 3.5%!important;
+}
+
 .propic-button {
     border: none;
     overflow: hidden;
@@ -87,4 +96,25 @@ span {
     position: relative;
     bottom: 30px;
     left: 200px;
+}
+
+.change-psw-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-password{
+    width: 10%;
+    margin-block-start: 3%;
+    background-color: rgb(233, 126, 22);
+}
+
+.button-password:hover,
+.propic-button:hover {
+    background-color: rgb(255, 136, 0)!important;
+}
+
+.input-change-psw {
+    width: 30%!important;
 }

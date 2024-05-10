@@ -95,7 +95,6 @@ const Main = () => {
       } else {
           let tokenUserId = decodedUser.userId;
           let outputRes = await executeNetworkOperation ('get', `/getSubjects/${tokenUserId}`, "", buildAuthHeader(token))
-          console.log(outputRes)
           if(outputRes.data.statusCode === 200) {
             setInitLoading(false);
             setListOfSubject(outputRes.data.payload);
@@ -106,11 +105,6 @@ const Main = () => {
             }
           }
       }
-
-    }
-
-    const getTeachers = async () => {
-
 
     }
     

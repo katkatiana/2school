@@ -82,7 +82,15 @@ const Navbar = () => {
     return(
         <nav className = "myNav">
             <span className = "logo-img">
-                <a href = {"/homepage"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a>
+                <>
+                {
+                    loggedIn ? (
+                    (decodedUser) && (decodedUser.userCategory === TEACHER_CATEGORY_ID || decodedUser.userCategory === STUDENT_CATEGORY_ID) ? 
+                        <a href = {"/homepage"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a> :
+                        <a href = {"/adminPage"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a>
+                    ) : <a href = {"/login"}><img src = {require('./assets/logo-zoomed.png')} alt="logo" /></a>
+                }
+                </>
             </span>
             {
               loggedIn ? <div className = "logged-nav"> <span className="welcome-msg"> Hi, {`${currentUserFullName}`}</span>

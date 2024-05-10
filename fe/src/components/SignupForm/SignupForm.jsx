@@ -14,7 +14,7 @@ import './SignupForm.css';
 import Navbar from '../Navbar/Navbar'
 import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID } from '../../utils/info';
 import { useNavigate } from 'react-router-dom';
-
+import { Button } from 'antd';
 /******** Component Definition  *************************************************/
 
 const TEACHER_STRING = "Teacher";
@@ -181,7 +181,7 @@ const clearForm = () => {
         <>
             <Navbar />
             <div className="signup-form">
-                <h2>Sign Up</h2>
+                <h2>User Sign Up</h2>
                 <form onSubmit = {handleOnSubmit} className = 'entire-form'>
                     <div className="form-group first-form-group">
                         <input 
@@ -239,7 +239,7 @@ const clearForm = () => {
                         </select>                        
                     </div>
                     <div className = 'form-button'>
-                        <button type="submit">Sign Up</button>
+                        <Button type="submit">Sign Up</Button>
                     </div>
                 </form>
             </div>

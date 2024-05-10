@@ -16,8 +16,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Table, Button, Card, List, Tooltip, Modal, Dropdown, Typography } from 'antd';
 import { Checkbox } from 'antd';
 import { PlusOutlined, DeleteOutlined, EditOutlined, InfoOutlined, CheckOutlined } from '@ant-design/icons';
-import { DownOutlined, SmileOutlined, FileOutlined } from '@ant-design/icons';
-import { Select, Space } from 'antd';
+import { FileOutlined } from '@ant-design/icons';
+import { Select } from 'antd';
 import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID } from '../../utils/info';
 
 /******** Component Definition  *************************************************/
@@ -54,6 +54,8 @@ const ClassDetails = () => {
     const [disciplinaryReportList, setDisciplinaryReportList] = useState([]);
     const [disciplinaryReportId, setDisciplinaryReportId] = useState();
     const [currentUserCategory, setCurrentUserCategory] = useState();
+    const [isStudent, setIsStudent] = useState(false);
+    const [isTeacher, setIsTeacher] = useState(false);
     const [newHomework, setNewHomework] = useState(
       {
         subject: '',
@@ -137,24 +139,7 @@ const ClassDetails = () => {
                   missing: <Checkbox onChange={onChange}></Checkbox> 
                 });    
               })
-              setTableData(localData);
-              //setHomeworkData(outputRes.data.payload.homeworkId);
-              // console.log(outputRes.data.payload.homeworkId)
-              // outputRes.data.payload.homeworkId.map(hw => {
-              //   localHomeworkData.push({
-              //     id: hw._id,
-              //     title: hw.subjectId.name,
-              //     subjectId: hw.subjectId._id,
-              //     content: hw.content,
-              //     teacher: hw.teacherId.firstName + " " + hw.teacherId.lastName,
-              //     attachment: hw.attachment || "",
-              //     isEditing : false
-              //   });                
-              // })
-              // console.log("LHD", localHomeworkData);
-              // setHomeworkData(localHomeworkData);
-              //console.log(data.studentsId[0].firstName)
-              
+              setTableData(localData);              
             } else {
               alert(outputRes.data.message + "\n Please, try again.");
             }
@@ -514,8 +499,10 @@ const ClassDetails = () => {
       getReports();
       if(decodedUser.userCategory === TEACHER_CATEGORY_ID){
         getSubjects();
+        setIsTeacher(true)
       } else {
         // get Teachers
+        setIsStudent(true)
       }      
       getHomeworks();
     }, []);   
@@ -546,35 +533,39 @@ const ClassDetails = () => {
                 </Button>
                 {
                   isClickedHmwk ?  
-                                <div>                        
-                                  <Tooltip title="Add">
-                                    <Button shape="circle" icon={<PlusOutlined />} onClick={showModalHomework} />
-                                  </Tooltip>
-                                  <Modal title="Add new homework" open={isModalHomeworkOpen} onOk={handleOkHomework} onCancel={handleCancelHomework}>
-                                  <Select
-                                    onChange={handleHomeworkSelect}
-                                    defaultValue="Select.."
-                                    style={{
-                                      width: 120,
-                                    }}
-                                    options={listOfSubjects}
-                                    value={currentSelectedSubject.label}
-                                  />
-                                    <textarea 
-                                      type="text"
-                                      name = 'content'
-                                      value={currentHomeworkText} 
-                                      placeholder='Write here your homework...'
-                                      onChange={handleOnChangeHmwk}
-                                    />
-                                    <input 
-                                      type="file" 
-                                      id="attachment"
-                                      name="attachment"
-                                      accept="*"
-                                      onChange={handleUploadedHomeworkFile}
-                                    />
-                                  </Modal>
+                                <div>
+                                  {
+                                    isTeacher ? <>
+                                                  <Tooltip title="Add">
+                                                    <Button shape="circle" icon={<PlusOutlined />} onClick={showModalHomework} />
+                                                  </Tooltip>
+                                                  <Modal title="Add new homework" open={isModalHomeworkOpen} onOk={handleOkHomework} onCancel={handleCancelHomework}>
+                                                  <Select
+                                                    onChange={handleHomeworkSelect}
+                                                    defaultValue="Select.."
+                                                    style={{
+                                                      width: 120,
+                                                    }}
+                                                    options={listOfSubjects}
+                                                    value={currentSelectedSubject.label}
+                                                  />
+                                                    <textarea 
+                                                      type="text"
+                                                      name = 'content'
+                                                      value={currentHomeworkText} 
+                                                      placeholder='Write here your homework...'
+                                                      onChange={handleOnChangeHmwk}
+                                                    />
+                                                    <input 
+                                                      type="file" 
+                                                      id="attachment"
+                                                      name="attachment"
+                                                      accept="*"
+                                                      onChange={handleUploadedHomeworkFile}
+                                                    />
+                                                  </Modal>
+                                                </> : ""
+                                  }                        
                                   <List
                                     grid={{
                                       gutter: 16,
@@ -590,47 +581,52 @@ const ClassDetails = () => {
                                           {
                                             item.attachment.length > 0 ? <a href={item.attachment} target="_blank"><FileOutlined />See attachment</a> : ""
                                           }
-                                          <Button 
-                                            shape="circle" 
-                                            icon= {<EditOutlined />}
+                                          {
+                                            isTeacher ? <>
+                                                          <Button 
+                                                            shape="circle" 
+                                                            icon= {<EditOutlined />}
 
-                                            className='dis-icon-buttons' 
-                                            onClick={e => handleIsEditingHmwk(item)}
-                                          />
-                                          <Modal title="Modify Homework" open={isModalHomeworkModifyOpen} onOk={handleOkHomework} onCancel={handleCancelModifyHomework}>
-                                            <Select
-                                              onChange={handleHomeworkSelect}
-                                              defaultValue="Select.."
-                                              style={{
-                                                width: 120,
-                                              }}
-                                              options={listOfSubjects}
-                                              value={currentSelectedSubject}
-                                            />
-                                              <textarea 
-                                                type="text"
-                                                name = 'content'
-                                                value={currentHomeworkText} 
-                                                placeholder='Write here your homework...'
-                                                onChange={handleOnChangeHmwk}
-                                              />
-                                              <input 
-                                                type="file" 
-                                                id="attachment-mod"
-                                                name="attachment"
-                                                accept="*"
-                                                onChange={handleUploadedHomeworkFile}
-                                              />
-                                              {
-                                                currentUploadedFile.length > 0 ? <p><a href={item.attachment} target="_blank"><FileOutlined />Attachment</a> is present</p>: <p>Attachment not present</p>
-                                              }
-                                          </Modal>
-                                          <Button 
-                                            shape="circle" 
-                                            icon={<DeleteOutlined />} 
-                                            onClick={e => handleDeleteHmwk(item)}
-                                            className='dis-icon-buttons' 
-                                          />
+                                                            className='dis-icon-buttons' 
+                                                            onClick={e => handleIsEditingHmwk(item)}
+                                                          />
+                                                          <Modal title="Modify Homework" open={isModalHomeworkModifyOpen} onOk={handleOkHomework} onCancel={handleCancelModifyHomework}>
+                                                            <Select
+                                                              onChange={handleHomeworkSelect}
+                                                              defaultValue="Select.."
+                                                              style={{
+                                                                width: 120,
+                                                              }}
+                                                              options={listOfSubjects}
+                                                              value={currentSelectedSubject}
+                                                            />
+                                                              <textarea 
+                                                                type="text"
+                                                                name = 'content'
+                                                                value={currentHomeworkText} 
+                                                                placeholder='Write here your homework...'
+                                                                onChange={handleOnChangeHmwk}
+                                                              />
+                                                              <input 
+                                                                type="file" 
+                                                                id="attachment-mod"
+                                                                name="attachment"
+                                                                accept="*"
+                                                                onChange={handleUploadedHomeworkFile}
+                                                              />
+                                                              {
+                                                                currentUploadedFile.length > 0 ? <p><a href={item.attachment} target="_blank"><FileOutlined />Attachment</a> is present</p>: <p>Attachment not present</p>
+                                                              }
+                                                          </Modal>
+                                                          <Button 
+                                                            shape="circle" 
+                                                            icon={<DeleteOutlined />} 
+                                                            onClick={e => handleDeleteHmwk(item)}
+                                                            className='dis-icon-buttons' 
+                                                          />
+                                                        </> : ""
+                                          }
+                                          
                                           </Card>
                                       </List.Item>
                                     )}
@@ -640,9 +636,14 @@ const ClassDetails = () => {
               </div>
               <div>
                 <div className='disciplinary-section'>
-                <Tooltip title="To add a report to a student, you need to select them first. Otherwise, it will be added to the entire class.">
-                  <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
-                </Tooltip>
+                  {
+                    isTeacher ? <>
+                                  <Tooltip title="To add a report to a student, you need to select them first. Otherwise, it will be added to the entire class.">
+                                    <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+                                  </Tooltip>
+                                </> : ""
+                  }
+                
                   <Button 
                     size={size} 
                     className='disciplinary-button'
@@ -652,25 +653,31 @@ const ClassDetails = () => {
                   </Button>
                   </div>
                 {
-                  isClickedDisciplinary ? <div> 
-                                            <Tooltip title="Add">
-                                              <Button shape="circle" icon={<PlusOutlined />} onClick={showModalDisciplinaryFile} />
-                                            </Tooltip>
-                                            <Modal 
-                                              title="Add new report" 
-                                              open={isModalDisciplinaryFileOpen} 
-                                              onOk={handleOkDisciplinaryFile} 
-                                              onCancel={handleCancelDisciplinaryFile}
-                                            >
-                                              <textarea 
-                                                type="text"
-                                                name = 'content'
-                                                value={newDisciplinaryReport.content} 
-                                                placeholder='Write here your report...'
-                                                onChange={handleOnChangeDisciplinaryReport}
-                                              />
-                                              
-                                            </Modal>
+                  isClickedDisciplinary ? 
+                                        <div> 
+                                          {
+                                            isTeacher ? <>
+                                                          <Tooltip title="Add">
+                                                            <Button shape="circle" icon={<PlusOutlined />} onClick={showModalDisciplinaryFile} />
+                                                          </Tooltip>
+                                                          <Modal 
+                                                            title="Add new report" 
+                                                            open={isModalDisciplinaryFileOpen} 
+                                                            onOk={handleOkDisciplinaryFile} 
+                                                            onCancel={handleCancelDisciplinaryFile}
+                                                          >
+                                                            <textarea 
+                                                              type="text"
+                                                              name = 'content'
+                                                              value={newDisciplinaryReport.content} 
+                                                              placeholder='Write here your report...'
+                                                              onChange={handleOnChangeDisciplinaryReport}
+                                                            />
+                                                            
+                                                          </Modal>
+                                                        </> : ""
+                                          }
+                                            
                                             <List
                                               className='list-disciplinary'
                                               header={<div>Today's report(s)</div>}
@@ -681,7 +688,7 @@ const ClassDetails = () => {
                                                   From: {item.teacherName} 
                                                     <Typography.Text mark>{item.studentName.toUpperCase()}</Typography.Text> 
                                                     {
-                                                      item.isEditing ?                                     
+                                                      isTeacher && item.isEditing ?                                     
                                                         <div className="ms-2 me-auto">
                                                             <textarea
                                                               type="text"
@@ -692,24 +699,30 @@ const ClassDetails = () => {
                                                         </div> 
                                                       : " " + item.content
                                                     }
-                                                    <Button 
-                                                      shape="circle" 
-                                                      icon=
-                                                       {
-                                                        item.isEditing ? <CheckOutlined /> : <EditOutlined />
-                                                       }
-                                                      className='dis-icon-buttons' 
-                                                      onClick={e => handleIsEditingReport(item)}
-                                                    />
-                                                    <Button 
-                                                      shape="circle" 
-                                                      icon={<DeleteOutlined />} 
-                                                      className='dis-icon-buttons' 
-                                                      onClick={e => handleDeleteReport(item)}/>
+                                                    {
+                                                      isTeacher ? <>
+                                                                    <Button 
+                                                                      shape="circle" 
+                                                                      icon=
+                                                                      {
+                                                                        item.isEditing ? <CheckOutlined /> : <EditOutlined />
+                                                                      }
+                                                                      className='dis-icon-buttons' 
+                                                                      onClick={e => handleIsEditingReport(item)}
+                                                                    />
+                                                                    <Button 
+                                                                      shape="circle" 
+                                                                      icon={<DeleteOutlined />} 
+                                                                      className='dis-icon-buttons' 
+                                                                      onClick={e => handleDeleteReport(item)}
+                                                                    />
+                                                                  </> : ""
+                                                    }
+
                                                 </List.Item>
                                               )}
                                             />
-                                          </div> : ""
+                                        </div> : ""
                 }
               </div>
             </div>

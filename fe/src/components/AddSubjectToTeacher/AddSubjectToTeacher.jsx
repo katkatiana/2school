@@ -9,13 +9,12 @@
 /******** Import Section  *******************************************************/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, List, Skeleton, Divider } from 'antd';
-import { ReadOutlined } from '@ant-design/icons';
+import { Avatar, List, Skeleton, Divider, Button } from 'antd';
+import { ReadOutlined, InfoOutlined } from '@ant-design/icons';
 import { Calendar, theme } from 'antd';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
-import Button from 'react-bootstrap/Button';
 import { Table } from 'antd';
 
 
@@ -136,7 +135,7 @@ const AddSubjectToTeacher = () => {
                     key: outputRes.data.payload.indexOf(sub),
                     id: sub._id,
                     sub: sub.name,
-                    nr: outputRes.data.payload.indexOf(sub),
+                    nr: outputRes.data.payload.indexOf(sub)+1,
                 })
               })
               setSubjectTableData(localSubjArr);
@@ -176,7 +175,7 @@ const AddSubjectToTeacher = () => {
                     key: outputRes.data.payload.indexOf(t),
                     id: t._id,
                     teacherName: t.firstName + " " + t.lastName,
-                    nr: outputRes.data.payload.indexOf(t),
+                    nr: outputRes.data.payload.indexOf(t)+1,
                     subjects: TeacherSubjListString
                 })
               })
@@ -220,6 +219,9 @@ const AddSubjectToTeacher = () => {
 
     return (
         <>
+        <Tooltip title="To add a subject to a teacher, select them in the respective tables, then click Add.">
+            <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+        </Tooltip>
         <div className='column-center-detailed'>
               <Table
                   {...SubjectTableProps}
@@ -244,7 +246,7 @@ const AddSubjectToTeacher = () => {
                   }}                  
               />
         </div>
-        <Button onClick={addSubjectToTeacher}>
+        <Button type = 'button' onClick={addSubjectToTeacher}>
             Add
         </Button>
         </>

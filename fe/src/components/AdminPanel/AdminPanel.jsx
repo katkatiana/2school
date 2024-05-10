@@ -10,12 +10,11 @@
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, List, Skeleton } from 'antd';
+import { Avatar, List, Skeleton, Button } from 'antd';
 import { Calendar, theme } from 'antd';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
-import Button from 'react-bootstrap/Button';
 
 // const onPanelChange = (value, mode) => {
 //   console.log(value.format('YYYY-MM-DD'), mode);
@@ -38,36 +37,45 @@ const AdminPanel = () => {
 
     return (
         <div className='container-admin'>
-           <button 
-            type = 'button'
-            onClick = {e => navigate("/signup")}
-            > Create New User </button>
-            <button 
-                type = 'button'
-                onClick = {e => navigate("/createSubject")}
-            > Create New Subject </button>
-            <button
-                disabled
-                style={{backgroundColor:'#3c3c3c'}}
-                type = 'button'
-                onClick = {e => navigate("/createClass")}
-            > Create New Class </button>
-            <button 
-                disabled
-                style={{backgroundColor:'#3c3c3c'}}
-                type = 'button'
-                onClick = {e => navigate("/addUserToClass")}
-            > Add User to Class </button>
-            <button 
-                type = 'button'
-                onClick = {e => navigate("/addSubjectToTeacher")}
-            > Add Subject to Teacher </button>
-            <button 
-                disabled
-                style={{backgroundColor:'#3c3c3c'}}
-                type = 'button'
-                onClick = {e => navigate("/modifyDeleteUser")}
-            > Modify/Delete User </button>
+           <Tooltip title="Create a new user, either a teacher or a student.">
+            <Button 
+                    type = 'button'
+                    onClick = {e => navigate("/signup")}
+                    > Create New User 
+                </Button>
+            </Tooltip>
+            <Tooltip title="Modify or delete an existing user.">
+                <Button 
+                    disabled
+                    style={{backgroundColor:'#3c3c3c'}}
+                    type = 'button'
+                    onClick = {e => navigate("/modifyDeleteUser")}
+                > Modify/Delete User </Button>
+            </Tooltip>
+            <Tooltip title="Create a new subject.">
+                <Button 
+                    type = 'button'
+                    onClick = {e => navigate("/createSubject")}
+                > Create New Subject </Button>
+            </Tooltip>
+            <Tooltip title="Assign an existing subject to a given teacher.">
+                <Button 
+                    type = 'button'
+                    onClick = {e => navigate("/addSubjectToTeacher")}
+                > Add Subject to Teacher </Button>
+            </Tooltip>
+            <Tooltip title="Create a new classroom.">
+                <Button
+                    type = 'button'
+                    onClick = {e => navigate("/createClass")}
+                > Create New Class </Button>
+            </Tooltip>
+            <Tooltip title="Add an existing teacher or student to a given class.">
+                <Button 
+                    type = 'button'
+                    onClick = {e => navigate("/addUserToClass")}
+                > Add User to Class </Button>
+            </Tooltip>
         </div>
       );
 }

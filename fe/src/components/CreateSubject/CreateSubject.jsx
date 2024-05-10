@@ -9,13 +9,12 @@
 /******** Import Section  *******************************************************/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, List, Skeleton, Divider } from 'antd';
-import { ReadOutlined } from '@ant-design/icons';
+import { Avatar, List, Skeleton, Divider, Button } from 'antd';
+import { ReadOutlined, InfoOutlined } from '@ant-design/icons';
 import { Calendar, theme } from 'antd';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
-import Button from 'react-bootstrap/Button';
 
 // const onPanelChange = (value, mode) => {
 //   console.log(value.format('YYYY-MM-DD'), mode);
@@ -99,7 +98,10 @@ const CreateSubject = () => {
     return (
         <>
         <div>
-            <Divider orientation="left">Subjects</Divider>
+            <Tooltip title="To create a new subject, insert the subject name and then click Add.">
+                    <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+            </Tooltip>
+            <Divider orientation="left">All Subjects</Divider>
             <List
             className="demo-loadmore-list"
             loading={initLoading}
@@ -117,10 +119,10 @@ const CreateSubject = () => {
                             onChange = {handleOnChange}    
                             required 
                         />
-              <button 
+              <Button 
                 type = 'button'
                 onClick = {handleSubjectAdd}
-            > Add </button>
+            > Add </Button>
             </div>
         </>
       );
