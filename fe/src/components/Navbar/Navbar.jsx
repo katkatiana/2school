@@ -93,7 +93,16 @@ const Navbar = () => {
                 </>
             </span>
             {
-              loggedIn ? <div className = "logged-nav"> <span className="welcome-msg"> Hi, {`${currentUserFullName}`}</span>
+              loggedIn ? <div className = "logged-nav"> 
+                            <>
+                            {
+                                (decodedUser) && (decodedUser.userCategory === TEACHER_CATEGORY_ID) ? 
+                                <span className="welcome-msg"> Hi, {`${currentUserFullName}`} 💼</span> : 
+                                (decodedUser) && (decodedUser.userCategory === STUDENT_CATEGORY_ID) ? 
+                                <span className="welcome-msg"> Hi, {`${currentUserFullName}`} 🎒</span> : 
+                                <span className="welcome-msg"> Hi, {`${currentUserFullName}`} 💻</span>
+                            }                            
+                            </>                            
                             <>
                             {(decodedUser) && (decodedUser.userCategory === TEACHER_CATEGORY_ID || decodedUser.userCategory === STUDENT_CATEGORY_ID) ? 
                             <Tooltip title="Account Info">

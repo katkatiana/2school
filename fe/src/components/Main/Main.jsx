@@ -69,9 +69,11 @@ const Main = () => {
                   teacherSubjectArray.map(s => {
                     teacherLocalSubjectArray.push(s.name)
                   })
+                  let subjString = teacherLocalSubjectArray.toString();
+                  subjString = subjString.replace(",", "\n")
                   localTeachersArray.push({
                     teacherName : t.firstName + " " + t.lastName,
-                    subjectString : teacherLocalSubjectArray.toString()
+                    subjectString : teacherLocalSubjectArray
                   })
                 });
                 setListOfTeachers(localTeachersArray);
@@ -122,17 +124,17 @@ const Main = () => {
             <div className = 'container'>
                 { currentUserCategory === TEACHER_CATEGORY_ID ?
                   <div className='column-left-main'>
-                  <Divider orientation="left" className='column-left-main-title'>Your subjects</Divider>
+                  <Divider orientation="left" className='column-left-main-title'>📖 Your Subjects</Divider>
                   <List
                     size="small"
                     bordered
                     dataSource={listOfSubjects}
-                    renderItem={(item) => <List.Item><ReadOutlined className='sub-icon' />{item.name}</List.Item>}
+                    renderItem={(item) => <List.Item>{item.name}</List.Item>}
                   />
                   </div>
                   : 
                   <div className='column-left-main'>
-                  <Divider orientation="left" className='column-left-main-title'>Your Teachers</Divider>
+                  <Divider orientation="left" className='column-left-main-title'>🧑🏻‍🏫 Your Teachers</Divider>
                   <List
                     size="small"
                     bordered
@@ -148,7 +150,7 @@ const Main = () => {
                   </div>
                 }
                 <div className='column-center-main'>
-                  <Divider orientation="left">Your classrooms</Divider>
+                  <Divider orientation="left">📚 Your Classrooms</Divider>
                     <List
                     className="demo-loadmore-list"
                     loading={initLoading}
@@ -160,7 +162,7 @@ const Main = () => {
                           key={item._id}
                           actions={[
                           <Tooltip title="Go to classroom details">
-                          <a href={"/classDetails/" + item._id} key="list-loadmore-edit">Details</a>
+                          <a href={"/classDetails/" + item._id} key="list-loadmore-edit">🔎Details</a>
                           </Tooltip>
                         ]}
                         >

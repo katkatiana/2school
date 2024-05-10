@@ -241,15 +241,15 @@ const UserInfo = () => {
                     
                     <div className="info-details">
                         <div className="info-item">
-                            <label htmlFor="firstname">First Name:</label>
+                            <label htmlFor="firstname">ℹ️First Name:</label>
                             <span id="firstname">{currentUser.firstName}</span>
                         </div>
                         <div className="info-item">
-                            <label htmlFor="lastname">Last Name:</label>
+                            <label htmlFor="lastname">ℹ️Last Name:</label>
                             <span id="lastname">{currentUser.lastName}</span>
                         </div>
                         <div className="info-item">
-                            <label htmlFor="email">Email:</label>
+                            <label htmlFor="email">📧Email:</label>
                             <span id="email">{currentUser.email}</span>
                         </div>
                         <div className = 'button-pswd'>

@@ -5,8 +5,8 @@
 }
 
 .column-center-detailed {
-    flex-grow: 1;
-    width: 50%;
+    flex-grow: 0;
+    width: 60%;
     margin: 0;
     padding-block-start: 3%;
 }
@@ -15,12 +15,20 @@
     display: flex;
     padding-block-start: 3%;
     flex: 0 0 auto;
-    width: 25%;
+    width: 40%;
     align-items: center;
     justify-content: center;
     align-content: center;
     flex-direction: column;
 } 
+
+.homework-section-detailed {
+    width: 100%!important;
+}
+
+.disciplinary-section-detailed {
+    width: 100%!important;
+}
 
 .ant-table-content{
     width: 80%;
@@ -57,8 +65,12 @@
 
 .disciplinary-section{
     display: flex;
-    margin-inline-start: 3%;
-    margin-block-start: 5%;
+/*     margin-inline-start: 3%;
+ */    margin-block-start: 5%;
+}
+
+.ant-card{
+    aspect-ratio: 1/0.5!important;
 }
 
 .info-disciplinary{

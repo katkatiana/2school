@@ -523,13 +523,13 @@ const ClassDetails = () => {
               />
             </div>
             <div className = 'column-right-detailed'>
-              <div>
+              <div className = 'homework-section-detailed'>
                 <Button 
                   size={size} 
                   className='homework-button'
                   onClick={handleHomework}
                 >
-                  Homework
+                  <p>📓	Homework</p>
                 </Button>
                 {
                   isClickedHmwk ?  
@@ -579,7 +579,7 @@ const ClassDetails = () => {
                                           <p>Author: {item.teacher}</p>                                         
                                           <p>{item.content}</p>
                                           {
-                                            item.attachment.length > 0 ? <a href={item.attachment} target="_blank"><FileOutlined />See attachment</a> : ""
+                                            item.attachment.length > 0 ? <p>📎 <a href={item.attachment} target="_blank">See attachment</a></p> : ""
                                           }
                                           {
                                             isTeacher ? <>
@@ -634,8 +634,15 @@ const ClassDetails = () => {
                                 </div> : ""
                 }
               </div>
-              <div>
-                <div className='disciplinary-section'>
+              <div className='disciplinary-section-detailed'>
+                <div className='disciplinary-section'>                
+                  <Button 
+                    size={size} 
+                    className='disciplinary-button'
+                    onClick={handleDisciplinary}
+                  >
+                    ⚠️ Disciplinary Report
+                  </Button>
                   {
                     isTeacher ? <>
                                   <Tooltip title="To add a report to a student, you need to select them first. Otherwise, it will be added to the entire class.">
@@ -643,14 +650,6 @@ const ClassDetails = () => {
                                   </Tooltip>
                                 </> : ""
                   }
-                
-                  <Button 
-                    size={size} 
-                    className='disciplinary-button'
-                    onClick={handleDisciplinary}
-                  >
-                    Disciplinary Report
-                  </Button>
                   </div>
                 {
                   isClickedDisciplinary ? 

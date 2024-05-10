@@ -11,7 +11,7 @@ const APP_NAME = "2school"
 const TEACHER_CATEGORY_ID = 345;
 const STUDENT_CATEGORY_ID = 589;
 const ADMIN_CATEGORY_ID = 118;
-const INSTITUTE_NAME="International School of Como"
+const INSTITUTE_NAME="🏫 International School of Como"
 //const UNKNOWN_CATEGORY_ID = 0;
 
 
