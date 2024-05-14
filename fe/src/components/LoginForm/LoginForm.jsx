@@ -60,19 +60,21 @@ const LoginForm = () => {
             loginForm
         );
         
-        if(outputRes.data.statusCode === 200){
+        if(outputRes.data && outputRes.data.statusCode === 200){
             alert(outputRes.data.message)
             saveAuthToken(outputRes.headers.getAuthorization())
             navigate("/success")
         } else {
-            if(outputRes.data.errors){
+            if(outputRes.data && outputRes.data.errors){
                 let finalErrorMessage = outputRes.data.message + "\n";
                 outputRes.data.errors.map((errorMsg) => {
                     finalErrorMessage += errorMsg;
                 })
                 alert(finalErrorMessage)                       
-            } else {
+            } else if(outputRes.data && outputRes.data.message) {
                 alert(outputRes.data.message)
+            } else {
+                alert(outputRes)
             }
             if(outputRes.data.tokenExpired){
                 navigate("/login");

@@ -13,6 +13,7 @@ import CreateSubjectPage from './pages/CreateSubjectPage.jsx';
 import CreateClassPage from './pages/CreateClassPage.jsx';
 import AddSubjectToTeacherPage from "./pages/AddSubjectToTeacherPage.jsx";
 import AddUserToClassPage from "./pages/AddUserToClassPage.jsx";
+import ModifyDeleteUserPage from "./pages/ModifyDeleteUserPage.jsx";
 import Unauthorized from './pages/Unauthorized.jsx'
 import LoginSuccess from './pages/LoginSuccess.jsx';
 import SignupForm from "./components/SignupForm/SignupForm.jsx";
@@ -57,6 +58,7 @@ function App() {
             <Route path = '/createClass' element = {<CreateClassPage /> } />
             <Route path = '/addSubjectToTeacher' element = {<AddSubjectToTeacherPage /> } />
             <Route path = '/addUserToClass' element = {<AddUserToClassPage /> } />
+            <Route path = '/modifyDeleteUser' element = {<ModifyDeleteUserPage /> } />
             
           </Route>          
         </Routes>
