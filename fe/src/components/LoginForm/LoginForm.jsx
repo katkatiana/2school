@@ -59,7 +59,6 @@ const LoginForm = () => {
             '/login',
             loginForm
         );
-        
         if(outputRes.data.statusCode === 200){
             alert(outputRes.data.message)
             saveAuthToken(outputRes.headers.getAuthorization())
@@ -84,7 +83,7 @@ const LoginForm = () => {
         <>
             <div className="login-container">
                 <h2 className = 'first-title'>Electronic LogBook</h2>
-                <h2 className = 'second-title'>Login to 2school</h2>
+                <h2 className = 'second-title'>Login 2school</h2>
                 <form onSubmit = {handleOnSubmit} className="login-form">
                     <div className="form-group">
                         <label htmlFor="email" className='email-label'>Email:</label>

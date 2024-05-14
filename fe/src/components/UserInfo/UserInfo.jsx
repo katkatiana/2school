@@ -249,7 +249,7 @@ const UserInfo = () => {
                             <span id="lastname">{currentUser.lastName}</span>
                         </div>
                         <div className="info-item">
-                            <label htmlFor="email">📧Email:</label>
+                            <label htmlFor="email" id='email'>📧Email:</label>
                             <span id="email">{currentUser.email}</span>
                         </div>
                         <div className = 'button-pswd'>

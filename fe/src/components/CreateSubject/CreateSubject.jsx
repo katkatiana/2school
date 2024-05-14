@@ -96,35 +96,35 @@ const CreateSubject = () => {
     }
 
     return (
-        <>
         <div>
-            <Tooltip title="To create a new subject, insert the subject name and then click Add.">
-                    <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
-            </Tooltip>
-            <Divider orientation="left">All Subjects</Divider>
-            <List
-            className="demo-loadmore-list"
-            loading={initLoading}
-            itemLayout="horizontal"
-            dataSource={listOfSubjects}
-            renderItem={(item) => <List.Item><ReadOutlined className='sub-icon' />{item.name}</List.Item>}
-            />
-        </div>
-           <div className="">
-                        <input 
-                            type = "string" 
-                            name = "name" 
-                            placeholder = "Insert Subject Name here" 
-                            value = {subjectName.name}
-                            onChange = {handleOnChange}    
-                            required 
-                        />
-              <Button 
-                type = 'button'
-                onClick = {handleSubjectAdd}
-            > Add </Button>
+            <div className = 'subjects-table'>
+                <Tooltip title="To create a new subject, insert the subject name and then click Add.">
+                        <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+                </Tooltip>
+                <Divider orientation="left">All Subjects</Divider>
+                <List
+                className="demo-loadmore-list"
+                loading={initLoading}
+                itemLayout="horizontal"
+                dataSource={listOfSubjects}
+                renderItem={(item) => <List.Item><ReadOutlined className='sub-icon' />{item.name}</List.Item>}
+                />
             </div>
-        </>
+            <div className="">
+                            <input 
+                                type = "string" 
+                                name = "name" 
+                                placeholder = "Insert Subject Name here" 
+                                value = {subjectName.name}
+                                onChange = {handleOnChange}    
+                                required 
+                            />
+                <Button 
+                    type = 'button'
+                    onClick = {handleSubjectAdd}
+                > Add </Button>
+            </div>
+        </div>
       );
 }
 

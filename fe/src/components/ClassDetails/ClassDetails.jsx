@@ -535,7 +535,7 @@ const ClassDetails = () => {
                   isClickedHmwk ?  
                                 <div>
                                   {
-                                    isTeacher ? <>
+                                    isTeacher ? <div className='add-section'>
                                                   <Tooltip title="Add">
                                                     <Button shape="circle" icon={<PlusOutlined />} onClick={showModalHomework} />
                                                   </Tooltip>
@@ -564,7 +564,7 @@ const ClassDetails = () => {
                                                       onChange={handleUploadedHomeworkFile}
                                                     />
                                                   </Modal>
-                                                </> : ""
+                                                </div> : ""
                                   }                        
                                   <List
                                     grid={{
@@ -582,7 +582,7 @@ const ClassDetails = () => {
                                             item.attachment.length > 0 ? <p>📎 <a href={item.attachment} target="_blank">See attachment</a></p> : ""
                                           }
                                           {
-                                            isTeacher ? <>
+                                            isTeacher ? <div className = 'homework-btn-section'>
                                                           <Button 
                                                             shape="circle" 
                                                             icon= {<EditOutlined />}
@@ -624,7 +624,7 @@ const ClassDetails = () => {
                                                             onClick={e => handleDeleteHmwk(item)}
                                                             className='dis-icon-buttons' 
                                                           />
-                                                        </> : ""
+                                                        </div> : ""
                                           }
                                           
                                           </Card>
@@ -655,7 +655,7 @@ const ClassDetails = () => {
                   isClickedDisciplinary ? 
                                         <div> 
                                           {
-                                            isTeacher ? <>
+                                            isTeacher ? <div className='add-section'>
                                                           <Tooltip title="Add">
                                                             <Button shape="circle" icon={<PlusOutlined />} onClick={showModalDisciplinaryFile} />
                                                           </Tooltip>
@@ -674,7 +674,7 @@ const ClassDetails = () => {
                                                             />
                                                             
                                                           </Modal>
-                                                        </> : ""
+                                                        </div> : ""
                                           }
                                             
                                             <List
@@ -699,7 +699,7 @@ const ClassDetails = () => {
                                                       : " " + item.content
                                                     }
                                                     {
-                                                      isTeacher ? <>
+                                                      isTeacher ? <div className = 'btn-disciplinary-section'>
                                                                     <Button 
                                                                       shape="circle" 
                                                                       icon=
@@ -715,7 +715,7 @@ const ClassDetails = () => {
                                                                       className='dis-icon-buttons' 
                                                                       onClick={e => handleDeleteReport(item)}
                                                                     />
-                                                                  </> : ""
+                                                                  </div> : ""
                                                     }
 
                                                 </List.Item>

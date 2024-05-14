@@ -84,7 +84,7 @@ span {
     
 }
 
-label[for = "email"]{
+label[for = "email"] #email{
     margin-inline-end: 3.5%!important;
 }
 
