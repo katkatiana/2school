@@ -31,6 +31,10 @@ const deleteItemRoute = require('./routes/deleteItem');
 const disciplinaryFileRoute = require('./routes/disciplinaryFile.js');
 const modifyItemRoute = require('./routes/modifyItem');
 const adminRoute = require('./routes/admin');
+const { sendResponse } = require('./utils/utils.js');
+
+let isDbUp = false;
+
 /******** Middleware Section  *******************************************************/
 
 app.use(express.json());
@@ -52,6 +56,13 @@ app.use('/', deleteItemRoute);
 app.use('/', disciplinaryFileRoute);
 app.use('/', modifyItemRoute);
 app.use('/', adminRoute);
+app.get('/', (req, res) => {
+    if(isDbUp){
+        sendResponse(res, 200, "Up");
+    } else {
+        sendResponse(res, 500, "Down");
+    }    
+});
 
 /** Connection to mongoose */
 mongoose.connect(process.env.MONGODB_URL);
@@ -60,6 +71,7 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Db connection error'));
 db.once('open', () => {
     console.log('Database successfully connected')
+    isDbUp = true;
 })
 
 app.listen(PORT, () => console.log(`Server connected and listening on port ${PORT}`))

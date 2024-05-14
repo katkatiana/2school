@@ -1,7 +1,6 @@
 /**
- * @fileoverview Main.jsx
- * This component renders the page containing all info of the logged user
- * in order to see and modify them.
+ * @fileoverview AdminPanel.jsx
+ * This component renders the page containing all the features available to the admin user.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */
@@ -10,15 +9,9 @@
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, List, Skeleton, Button } from 'antd';
-import { Calendar, theme } from 'antd';
-import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
-import { INSTITUTE_NAME } from '../../utils/info';
-import { Tooltip } from 'antd';
-
-// const onPanelChange = (value, mode) => {
-//   console.log(value.format('YYYY-MM-DD'), mode);
-// };
+import { Tag, Button, Tooltip } from 'antd';
+import { executeNetworkOperation } from '../../utils/utils';
+import { CONTACT_EMAIL } from '../../utils/info';
 
 /******** Component Definition  *************************************************/
 
@@ -31,12 +24,33 @@ import { Tooltip } from 'antd';
 const AdminPanel = () => {
 
     const navigate = useNavigate();
+    const [backendIsUp, setBackendIsUp] = useState(false);
 
     useEffect(() => {
+    const updateBackendStatus = async () => {
+        let outputRes = await executeNetworkOperation('get', "");
+        console.log(outputRes)
+        if(outputRes){
+            if(outputRes.data.statusCode && outputRes.data.statusCode === 200){
+                setBackendIsUp(true);
+            } else {
+                setBackendIsUp(false);
+            }
+        } else {
+            setBackendIsUp(false);
+        }
+    }
+    updateBackendStatus();
     }, []);
 
-    return (
+    return (        
+        
         <div className='container-admin'>
+            
+            {
+                backendIsUp ? <p align="center">Great! All systems are  <Tag color="#87d068">up</Tag>and running.</p> : <p align="center">Something is wrong and the server connection is <Tag color="#f50">down</Tag><br/>Please reach out to <a href={"mailto:"+CONTACT_EMAIL}>{CONTACT_EMAIL}.</a></p>
+            }
+
            <Tooltip title="Create a new user, either a teacher or a student.">
             <Button 
                     type = 'button'
@@ -46,8 +60,6 @@ const AdminPanel = () => {
             </Tooltip>
             <Tooltip title="Modify or delete an existing user.">
                 <Button 
-                    disabled
-                    style={{backgroundColor:'#3c3c3c'}}
                     type = 'button'
                     onClick = {e => navigate("/modifyDeleteUser")}
                 > Modify/Delete User </Button>
@@ -77,6 +89,8 @@ const AdminPanel = () => {
                 > Add User to Class </Button>
             </Tooltip>
         </div>
+
+
       );
 }
 
