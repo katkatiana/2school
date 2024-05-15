@@ -1,0 +1,10 @@
+.create-class-container{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.button-create-class{
+    width: 15%;
+}

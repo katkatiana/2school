@@ -10,10 +10,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'antd';
-import { InfoOutlined } from '@ant-design/icons';
+import { InfoOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { Tooltip } from 'antd';
 import { Table } from 'antd';
+import './ModifyDeleteUser.css';
 
 /******** Component Definition  *************************************************/
 
@@ -133,29 +134,33 @@ const ModifyDeleteUser = () => {
     }
 
     return (
-        <>
-        <Tooltip title="To delete an user from the system, select them in the respective tables, then click Delete.">
-            <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
-        </Tooltip>
-        <div className='column-center-detailed'>
-              <Table
-                  {...UserTableProps}
-                  columns={UserTableColumns}
-                  dataSource={UserTableData}
-                  pagination={false}
-                  rowSelection={{
-                    type: selectionType,
-                    ...UserRowSelection,
-                  }}                  
-              />
+        <div className='modify-delete-user-container'>
+          <Tooltip title="To delete an user from the system, select them in the respective tables, then click Delete.">
+              <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+          </Tooltip>
+          <div className='column-center-detailed'>
+                <Table
+                    {...UserTableProps}
+                    columns={UserTableColumns}
+                    dataSource={UserTableData}
+                    pagination={false}
+                    rowSelection={{
+                      type: selectionType,
+                      ...UserRowSelection,
+                    }}                  
+                />
+          </div>
+          <div className='modify-delete-user-buttons'>
+            <Button type = 'button' onClick={deleteSelectedUser} className = 'modify-user-btn'>
+              <DeleteOutlined />
+                Delete
+            </Button>
+            <Button type = 'button' disabled className = 'delete-user-btn'>
+              <EditOutlined />
+                Modify
+            </Button>
+          </div>
         </div>
-        <Button type = 'button' onClick={deleteSelectedUser}>
-            Delete
-        </Button>
-        <Button type = 'button' disabled>
-            Modify
-        </Button>
-        </>
       );
 }
 

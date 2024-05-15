@@ -1,3 +1,25 @@
 .subjects-table{
     width: 60%!important;
 }
+
+.entire-create-subject-page{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ant-list-item{
+    margin-inline-start: 5%;
+}
+
+.add-subject-section{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-inline-end: 10%;
+    gap: 20px;
+}
+
+.info-disciplinary{
+    margin: 10px;
+}

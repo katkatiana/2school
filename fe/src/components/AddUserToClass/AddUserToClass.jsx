@@ -16,6 +16,7 @@ import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
 import { Table } from 'antd';
+import './AddUserToClass.css';
 
 
 // const onPanelChange = (value, mode) => {
@@ -245,38 +246,40 @@ const AddUserToClass = () => {
     }
 
     return (
-        <>
-        <Tooltip title="To add an user to a class, select them in the respective tables, then click Add.">
-            <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
-        </Tooltip>
-        <div className='column-center-detailed'>
-              <Table
-                  {...UserTableProps}
-                  columns={UserTableColumns}
-                  dataSource={UserTableData}
-                  pagination={false}
-                  rowSelection={{
-                    type: selectionType,
-                    ...UserRowSelection,
-                  }}                  
-              />
+        <div className = 'add-user-to-class-container'>
+          <Tooltip title="To add an user to a class, select them in the respective tables, then click Add.">
+              <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+          </Tooltip>
+          <div className='column-center-detailed'>
+                <Table
+                    {...UserTableProps}
+                    columns={UserTableColumns}
+                    dataSource={UserTableData}
+                    pagination={false}
+                    rowSelection={{
+                      type: selectionType,
+                      ...UserRowSelection,
+                    }}                  
+                />
+          </div>
+          <div className='column-center-detailed column-add-user-to-class'>
+                <Table
+                    {...ClassTableProps}
+                    columns={ClassTableColumns}
+                    dataSource={ClassTableData}
+                    pagination={false}
+                    className = 'add-user-to-class-table2'
+                    rowSelection={{
+                      type: selectionType,
+                      ...ClassRowSelection,
+                    }}                  
+                />
+                 <Button type = 'primary' onClick={addUserToClass} className = 'button-add-user-to-class'>
+                    Add
+                </Button>
+          </div>
+         
         </div>
-        <div className='column-center-detailed'>
-              <Table
-                  {...ClassTableProps}
-                  columns={ClassTableColumns}
-                  dataSource={ClassTableData}
-                  pagination={false}
-                  rowSelection={{
-                    type: selectionType,
-                    ...ClassRowSelection,
-                  }}                  
-              />
-        </div>
-        <Button type = 'button' onClick={addUserToClass}>
-            Add
-        </Button>
-        </>
       );
 }
 

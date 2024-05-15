@@ -1,0 +1,32 @@
+.modify-delete-user-buttons{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.modify-delete-user-container{
+    display: flex;
+    height: 100vh;
+}
+
+.modify-user-btn{
+    background-color: rgb(255, 223, 12);
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.modify-user-btn:hover{
+    background-color: yellow;
+}
+
+.delete-user-btn{
+    background-color: rgb(255, 77, 0);
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.delete-user-btn:hover{
+    background-color: red;
+}

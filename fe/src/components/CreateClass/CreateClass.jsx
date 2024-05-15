@@ -16,6 +16,9 @@ import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
 import { TEACHER_CATEGORY_ID, STUDENT_CATEGORY_ID } from '../../utils/info';
+import './CreateClass.css';
+
+
 // const onPanelChange = (value, mode) => {
 //   console.log(value.format('YYYY-MM-DD'), mode);
 // };
@@ -165,37 +168,42 @@ const CreateClass = () => {
       }
 
     return (
-        <>
+        <div className = 'create-class-container'>
+
+                <div className='column-center-main'>
                 <Tooltip title="To create a new classroom, click the button and insert the needed information.">
                     <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
                 </Tooltip>
-                <div className='column-center-main'>
                   <Divider orientation="left">All Classrooms</Divider>
                     <List
-                    loading={initLoading}
-                    itemLayout="horizontal"
-                    dataSource={list}
-                    renderItem={(item) => (
+                        loading={initLoading}
+                        itemLayout="horizontal"
+                        dataSource={list}
+                        renderItem={(item) => (
                       
-                        <List.Item
-                          key={item._id}
-                          
-                        >
-                          <Skeleton avatar title={false} loading={item.loading} active>
-                              <List.Item.Meta
-                              avatar={<Avatar src={item.logo} />}
-                              title={item.gradeOfClass + item.section}
-                              description={INSTITUTE_NAME}
-                              />
-                              {/* <div>content</div> */}
-                          </Skeleton>
-                        </List.Item>
+                            <List.Item
+                            key={item._id}
+                            
+                            >
+                            <Skeleton avatar title={false} loading={item.loading} active>
+                                <List.Item.Meta
+                                avatar={<Avatar src={item.logo} />}
+                                title={item.gradeOfClass + item.section}
+                                description={INSTITUTE_NAME}
+                                />
+                                {/* <div>content</div> */}
+                            </Skeleton>
+                            </List.Item>
                     )}
                     />
                 </div>
                 <Button 
-                type = 'button'
-                onClick = {handleCreateNewClass}> Create New Class </Button>
+                    type = 'primary'
+                    onClick = {handleCreateNewClass}
+                    className = 'button-create-class'
+                > 
+                    Create New Class 
+                </Button>
                 <Modal 
                     title="Create Class" 
                     open={isClassModalOpen} 
@@ -227,7 +235,7 @@ const CreateClass = () => {
                 </Modal>
 
 
-        </>
+        </div>
       );
 }
 

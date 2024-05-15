@@ -15,6 +15,7 @@ import { Calendar, theme } from 'antd';
 import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '../../utils/utils';
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
+import './CreateSubject.css';
 
 // const onPanelChange = (value, mode) => {
 //   console.log(value.format('YYYY-MM-DD'), mode);
@@ -91,12 +92,13 @@ const CreateSubject = () => {
                     navigate("/login");
                 }
                 getSubjects();
+                setSubjectName("")
             }      
         }
     }
 
     return (
-        <div>
+        <div className = 'entire-create-subject-page'>
             <div className = 'subjects-table'>
                 <Tooltip title="To create a new subject, insert the subject name and then click Add.">
                         <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
@@ -107,10 +109,10 @@ const CreateSubject = () => {
                 loading={initLoading}
                 itemLayout="horizontal"
                 dataSource={listOfSubjects}
-                renderItem={(item) => <List.Item><ReadOutlined className='sub-icon' />{item.name}</List.Item>}
+                renderItem={(item) => <List.Item>{item.name}</List.Item>}
                 />
             </div>
-            <div className="">
+            <div className = "add-subject-section">
                             <input 
                                 type = "string" 
                                 name = "name" 
@@ -120,7 +122,7 @@ const CreateSubject = () => {
                                 required 
                             />
                 <Button 
-                    type = 'button'
+                    type = 'primary'
                     onClick = {handleSubjectAdd}
                 > Add </Button>
             </div>

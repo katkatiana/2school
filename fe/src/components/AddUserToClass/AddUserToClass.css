@@ -1,0 +1,20 @@
+.add-user-to-class-container{
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+}
+
+.button-add-user-to-class{
+    width: 15%;
+    margin-block-start: 20px;
+}
+
+.column-add-user-to-class{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.add-user-to-class-table2{
+    width: 100%;
+}

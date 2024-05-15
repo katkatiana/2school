@@ -16,6 +16,7 @@ import { getAuthUserFromToken, executeNetworkOperation, buildAuthHeader } from '
 import { INSTITUTE_NAME } from '../../utils/info';
 import { Tooltip } from 'antd';
 import { Table } from 'antd';
+import './AddSubjectToTeacher.css';
 
 
 // const onPanelChange = (value, mode) => {
@@ -218,38 +219,39 @@ const AddSubjectToTeacher = () => {
     }
 
     return (
-        <>
-        <Tooltip title="To add a subject to a teacher, select them in the respective tables, then click Add.">
-            <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
-        </Tooltip>
-        <div className='column-center-detailed'>
-              <Table
-                  {...SubjectTableProps}
-                  columns={SubjectTableColumns}
-                  dataSource={SubjectTableData}
-                  pagination={false}
-                  rowSelection={{
-                    type: selectionType,
-                    ...SubjectRowSelection,
-                  }}                  
-              />
+        <div className = 'add-sub-tot-teach-container'>
+          <Tooltip title="To add a subject to a teacher, select them in the respective tables, then click Add.">
+              <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
+          </Tooltip>
+          <div className='column-center-detailed'>
+                <Table
+                    {...SubjectTableProps}
+                    columns={SubjectTableColumns}
+                    dataSource={SubjectTableData}
+                    pagination={false}
+                    rowSelection={{
+                      type: selectionType,
+                      ...SubjectRowSelection,
+                    }}                  
+                />
+          </div>
+          <div className='column-center-detailed column-add-user-to-class'>
+                <Table
+                    {...SubjectTableProps}
+                    columns={TeacherTableColumns}
+                    dataSource={TeacherTableData}
+                    className = 'add-user-to-class-table2'
+                    pagination={false}
+                    rowSelection={{
+                      type: selectionType,
+                      ...TeacherRowSelection,
+                    }}                  
+                />
+            <Button type = 'primary' onClick={addSubjectToTeacher} className='button-add-user-to-class'>
+                Add
+            </Button>
+          </div>
         </div>
-        <div className='column-center-detailed'>
-              <Table
-                  {...SubjectTableProps}
-                  columns={TeacherTableColumns}
-                  dataSource={TeacherTableData}
-                  pagination={false}
-                  rowSelection={{
-                    type: selectionType,
-                    ...TeacherRowSelection,
-                  }}                  
-              />
-        </div>
-        <Button type = 'button' onClick={addSubjectToTeacher}>
-            Add
-        </Button>
-        </>
       );
 }
 
