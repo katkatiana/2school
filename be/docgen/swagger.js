@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const options = {
   definition: {
-    openapi: '3.0.0',
+    swagger: '2.0',
     info: {
       title: '2school back-end API',
       description: "API endpoints for 2school application, made with Swagger",
