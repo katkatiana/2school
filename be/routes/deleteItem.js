@@ -39,9 +39,9 @@ const deletetools = require('../middleware/validateItemToDelete');
  *       - in: query
  *         name: itemType
  *         description: the type of item to be modified. Can be "homework" or "disciplinaryFile".        
+ *         enum: [homework, disciplinaryFile]
  *         schema: 
- *          type: string         
- *          enum: [homework, disciplinaryFile]
+ *          type: string          
  *     security:
  *      - bearerAuth: []
  *     responses:

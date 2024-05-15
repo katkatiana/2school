@@ -32,6 +32,13 @@ const usertools = require('../middleware/validateUserRoute');
  *     - Admin routes
  *     summary: Retrieves the list of all the registered users in the database. 
  *     description: Retrieves all the users registered in the database, either students or teachers. This operation requires a valid access token, and is allowed only for the admin role.
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema: 
+ *         type: string
+ *         description: the category of the user to retrieve. 345 for teachers, 589 for student, all to retrieve all the users (only for admin). 
+ *         enum: ["345", "589", "all"]
  *     security:
  *      - bearerAuth: []
  *     responses:
@@ -50,7 +57,7 @@ router.get('/getAllUsers', verifyToken, async (req, res) => {
     try{
 
         if(!requestedUserCategory){
-            throw new Error("User Category is missing.")
+            throw new Error("Requested Category is missing.")
         } else {
             if(requestedUserCategory.toString() === info.TEACHER_CATEGORY_ID.toString()){
                 targetDbModel = TeacherModel;

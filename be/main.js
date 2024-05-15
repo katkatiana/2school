@@ -80,5 +80,5 @@ db.once('open', () => {
 })
 
 app.listen(PORT, () => console.log(`Server connected and listening on port ${PORT}`))
-// setup swagger documentation route, by default it is available on <server_url>/docs
+// setup swagger documentation route, by default it is available on <server_url>:<PORT>/docs
 swaggerDocs(app, PORT);
