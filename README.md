@@ -1,55 +1,38 @@
+<p align="center">
+  <img src="fe/src/components/Navbar/assets/logo-zoomed.png" />
+</p>
 
-# Project Title
+# 2School
 
-A brief description of what this project does and who it's for
+2School is an open-source electronic-school logbook which can be used by teachers and students to monitor day-to-day school activity, including homeworks and presence information.
 
+## 🔧 Installation
 
-## API Reference
+The project is divided into two main folders: fe (front-end) and be (back-end).
 
-#### Get all items
+To run both, nodeJS installation is required.
 
-```http
-  GET /api/items
-```
-
-| Parameter | Type     | Description                |
-| :-------- | :------- | :------------------------- |
-| `api_key` | `string` | **Required**. Your API key |
-
-#### Get item
-
-```http
-  GET /api/items/${id}
-```
-
-| Parameter | Type     | Description                       |
-| :-------- | :------- | :-------------------------------- |
-| `id`      | `string` | **Required**. Id of item to fetch |
-
-#### add(num1, num2)
-
-Takes two numbers and returns the sum.
-
-
-## Deployment
-
-To deploy this project run
+To deploy the front-end on your local machine, run the following command inside the fe directory:
 
 ```bash
-  npm run deploy
+  npm run start
 ```
 
+To deploy the back-end, run the following command inside the be directory:
 
-## Features
+```bash
+  npm run dev
+```
 
-- Light/dark mode toggle
-- Live previews
-- Fullscreen mode
-- Cross platform
+## 📖 Documentation
 
+2School uses Swagger for documentation of backend endpoints.
+The documentation is always loaded and available by navigating to the /docs endpoint of the backend.
 
-## 🚀 About Me
-I'm a full stack developer...
+## 🔎 Features
 
-
-![Logo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/th5xamgrr6se0x5ro4g6.png)
+- Different roles for users: Teacher, Student, Admin
+- Modern and responsive design by using ant framework
+- Upload and retrieval of homework attachments through dedicated cloud services
+- Dedicated management panel for Admin users
+- More to come..
