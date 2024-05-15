@@ -15,7 +15,16 @@ const jwt = require('jsonwebtoken');
 
 
 /******** Functions Section  *******************************************************/
-
+/**
+ * sendResponse
+ * Sends the HTTP response given in input, by specifing several optional parameters.
+ * @param {*} res The response object, as given by expressJS.
+ * @param {*} statusCode the desired status code to be sent in the response.
+ * @param {*} message (optional) the optional message to be sent along the response.
+ * @param {*} payloadName (optional) name of the field that will contain user data.
+ * @param {*} payload (optional) user data to be added to the response
+ * @param {*} headers (optional) additional headers to be sent in the response.
+ */
 const sendResponse = (res, statusCode, message, payloadName, payload, headers) => {
     let responseContent = {
         statusCode: statusCode,
@@ -37,6 +46,19 @@ const sendResponse = (res, statusCode, message, payloadName, payload, headers) =
 
 }
 
+/**
+ * findUserCategory
+ * Given the input userId, returns the corresponding user object as
+ * retrieved from the database (if existing), along with the related
+ * user category.
+ * @param {*} userId the ID of the user to be searched 
+ * @returns an object structured in this way:
+ * {
+ *    user: <user object as retrieved from DB>
+ *    userCategory: <user category>
+ * }
+ * On a failed search, the object properties will be empty.
+ */
 const findUserCategory = async (userId) => {
 
     let userCategory;
@@ -67,12 +89,28 @@ const findUserCategory = async (userId) => {
     }
 }
 
+/**
+ * getUserObjFromToken
+ * Fetches the request headers for the authorization token,
+ * then returns its decoded version.
+ * @param {*} req the request as provided by expressJS router.
+ * @returns the decoded token obtained by jwt.decode.
+ */
 const getUserObjFromToken = async (req) => {
     const token = req.headers['authorization'];
     console.log(req.authUserObj);
     return await jwt.decode(token);
 }
 
+/**
+ * checkIdConsistency
+ * Checks if the properties contained in the propertyNameArray are part of the targetObj,
+ * and if yes if the provided userId is contained in them.
+ * @param {*} userId the user Id to be searched.
+ * @param {*} targetObj the object whose properties are to be searched
+ * @param {*} propertyNameArray name of the properties to be searched in the targetObj
+ * @returns true if the check is successfull, false otherwise.
+ */
 const checkIdConsistency = (userId, targetObj, propertyNameArray) =>
 {
     let returnFlag = false;

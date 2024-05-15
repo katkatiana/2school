@@ -53,37 +53,47 @@ let mailGenerator = new Mailgen({
  * '/signup':
  *  post:
  *     tags:
- *     - User Signup
- *     summary: Performs signup of the given user
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *           schema:
- *            type: object
- *            required:
- *              - first name
- *              - last name
- *              - email
- *              - password
- *            properties:
- *              first name:
- *                type: string
- *                default: John
- *              last name:
- *                type: string
- *                default: Doe
- *              email:
- *                type: string
- *                default: johndoe@scuola.edu.it
- *              password:
- *                type: string
- *                default: johnDoe20
+ *     - Admin routes
+ *     summary: Performs signup of the given user. 
+ *     description: Performs the registration of the given user. This route is meant to be used by admins, which are the only ones that can register new users. Upon successful registration, the user will be notified with an email to the specified address with its randomly generated password which can be used to login. This operation is allowed only for the admin role.
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: The parameters of the user to sign up.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - userCategory
+ *             - password
+ *             - firstName
+ *             - lastName
+ *             - email
+ *           properties:
+ *             userCategory:
+ *               type: number
+ *               description: 345 identifies the teacher category, 589 the student category.
+ *               example: 345
+ *             firstName:
+ *               type: string
+ *               description: Name of the user
+ *               example: John
+ *             lastName:
+ *               type: string
+ *               description: Last Name of the user
+ *               example: Doe
+ *             email:
+ *               type: string
+ *               description: email of the user to be registered.
+ *               example: johndoe@email.com
+ *     security:
+ *      - bearerAuth: []
  *     responses:
  *      201:
  *        description: User successfully created
  *      400:
  *        description: Email and/or password are missing and/or are not in the correct format.
+ *      401:
+ *        description: Access token is expired, or the current user is not authorized to access this route.
  *      409:
  *        description: User already exists
  *      500:

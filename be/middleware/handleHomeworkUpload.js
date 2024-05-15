@@ -1,9 +1,19 @@
+/**
+ * @fileoverview handleHomeworkUpload.js
+ * This middleware is responsible of handling the interaction with the cloudinary service whenever a new upload is needed.
+ * @author Mariakatia Santangelo
+ * @date   15-04-2024
+ */
+/********************************** Import section ***************************************************/
+
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const path = require("path");
 const tools = require('../utils/utils');
 const info = require('../utils/info');
+
+/********************************** Variables section *************************************************/
 
 /** Configuration of Cloudinary in order to connect to our personal account and upload documents there. */
 cloudinary.config(
@@ -15,6 +25,24 @@ cloudinary.config(
     }
 )
 
+/********************************** Functions section *************************************************/
+
+/**
+ * handleHomeworkUpload
+ * This middleware controls the upload request to the cloudinary service whenever a new attachment must be handled.
+ * A new file upload must be issued when a new homework is created with an attachment, or when
+ * an existing homework is modified by providing a new attachment to it.
+ * In both cases, multer + cloudinary configuration is used to parse the multipart/form-data request 
+ * and to provide a standard body to the next middlewares.
+ * File binary must be provided in the "attachment" property of the request.
+ * The uploaded file will be inserted in a classroom-ID specific folder, with a name that contains the actual date and
+ * that corresponds to the publicId of the file.
+ * A tag is added to the file, which corresponds to the publicId of the file.
+ * This tag is used to delete the file from cloudinary when needed.
+ * @param {*} req the incoming request. Will contain the file object if the upload is successful.
+ * @param {*} res the outgoing response.
+ * @param {*} next allows to advance to the next middleware, but only if no error occurred before.
+ */
 const handleHomeworkUpload = async (req, res, next) => {
 
     const itemType = req.query.itemType;    
@@ -28,16 +56,12 @@ const handleHomeworkUpload = async (req, res, next) => {
         // existing homework object update, so we must distinguish the two cases
         if(itemType){
             // this is the case of homework update
-            console.log("UPDATE");
             conditionToCheck = 
                 ((itemType === info.ITEM_TYPE_HOMEWORK) && (contentType.includes("multipart/form-data")))
         } else {
             // this is the case of homework first creation and upload
-            console.log("FIRST UPLOAD");
             conditionToCheck = (contentType.includes("multipart/form-data"));
         }
-        console.log(conditionToCheck);
-        console.log(contentType);
         if(conditionToCheck) 
         {
             const classId = req.query.classId;

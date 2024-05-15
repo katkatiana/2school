@@ -1,6 +1,6 @@
 /**
  * @fileoverview validateItemToDelete.js
- * This middleware is responsible of validating the the HTTP request needed to delete data.
+ * This middleware is responsible of validating the the HTTP request needed to delete homework or report.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */
@@ -36,7 +36,7 @@ cloudinary.config(
 
 /**
  * validateItemToDelete
- * This middleware controls every param of the body object contained in the homework add request, 
+ * This middleware controls every param of the body object contained in the homework/report delete request, 
  * and allows to specify what kind of characteristics they need to have in order to advance the request to 
  * the next middleware.
  * Occurred errors, if any, are sent as an array in the response.
@@ -128,10 +128,20 @@ const validateItemToDelete = async (req, res, next) => {
     }
 }
 
+/**
+ * deleteContentByPublicId
+ * Deletes specified content from cloudinary, given its publicId.
+ * PublicId is retrieved by taking the file URL (as stored in the db), retrieving the filename, and removing the extension.
+ * During file first upload we specified a tag for the file which corresponds to its publicId, so now we can use
+ * the cloudinary API: delete_resource_by_tag by giving in input the mentioned publicId.
+ * @param {*} publicId the publicId of the file, retrieved from the URL stored in the db.
+ * @param {*} fileExtensionToDelete the extension of the file to be deleted.
+ */
 const deleteContentByPublicId = async (publicId, fileExtensionToDelete) => {
     let resType;
     if(fileExtensionToDelete.includes("png") || 
-       fileExtensionToDelete.includes("jpg")){
+       fileExtensionToDelete.includes("jpg") ||
+       fileExtensionToDelete.includes("jpeg")){
         resType = {resource_type : "image"}
        } else {
         resType = {resource_type:"raw"};

@@ -1,5 +1,5 @@
 /**
- * @fileoverview validateUSerRoute.js
+ * @fileoverview validateUserRoute.js
  * This middleware is responsible of defining methods related to validation of user routes.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
@@ -21,17 +21,18 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const path = require("path");
 const bcrypt = require('bcrypt');
+const avatars = require('../utils/avatars');
 
 /********************************** Function section *************************************************/
 
 /**
  * validateUserToModify
- * This middleware controls every param of the body object contained in the homework add request, 
+ * This middleware controls every param of the body object contained in the user modification request, 
  * and allows to specify what kind of characteristics they need to have in order to advance the request to 
  * the next middleware.
  * Occurred errors, if any, are sent as an array in the response.
  * @param {*} req the incoming request. Contains the user body to be validated.
- * @param {*} res the outgoing response. It is sent with error 400 in case any error occurred.
+ * @param {*} res the outgoing response. It is sent with error 400 in case any error occurred, including an errors array containing the validation errors.
  * @param {*} next allows to advance to the next middleware, but only if no error occurred before.
  */
 const validateUserToModify = async (req, res, next) => {
@@ -99,10 +100,14 @@ const validateUserToModify = async (req, res, next) => {
         //ALLOWED MODIFICATIONS: AVATAR AND/OR PASSWORD
         
         if(req.body['avatar']){
-            newContent = {
-                avatar : req.body.avatar
-            };
-            paramsToModify.push(newContent);
+            if(avatars.PROPIC_ARRAY.includes(req.body['avatar'])){
+                newContent = {
+                    avatar : req.body.avatar
+                };
+                paramsToModify.push(newContent);
+            } else {
+                errors.push("The specified avatar URL is not valid.");
+            }
         }
         
         if(req.body['password']){
@@ -139,10 +144,14 @@ const validateUserToModify = async (req, res, next) => {
         }
 
         if(req.body['avatar']){
-            newContent = {
-                avatar : req.body.avatar
-            };
-            paramsToModify.push(newContent);
+            if(avatars.PROPIC_ARRAY.includes(req.body['avatar'])){
+                newContent = {
+                    avatar : req.body.avatar
+                };
+                paramsToModify.push(newContent);
+            } else {
+                errors.push("The specified avatar URL is not valid.");
+            }
         }
         
         if(req.body['password']){
@@ -160,7 +169,7 @@ const validateUserToModify = async (req, res, next) => {
     }
 
     if(errors.length > 0){
-        tools.sendResponse(res, 500, "User update failed due to validation errors.", "errors", errors)
+        tools.sendResponse(res, 400, "User update failed due to validation errors.", "errors", errors)
         console.log("[validateUserToModify] Failed with errors:\n", errors);
     } else {
         req.targetModelForModify = targetDbModel; // so the next code knows about the model on which the delete is to be performed
@@ -183,6 +192,16 @@ const validateUserToModify = async (req, res, next) => {
     }
 }
 
+/**
+ * validateUserToDelete
+ * This middleware controls every param of the body object contained in the user delete request, 
+ * and allows to specify what kind of characteristics they need to have in order to advance the request to 
+ * the next middleware.
+ * Occurred errors, if any, are sent as an array in the response.
+ * @param {*} req the incoming request. Contains the user body to be validated.
+ * @param {*} res the outgoing response. It is sent with error 400 in case any error occurred, including an errors array containing the validation errors.
+ * @param {*} next allows to advance to the next middleware, but only if no error occurred before.
+ */
 const validateUserToDelete = async (req, res, next) => {
     let errors = [];
     const userFromToken = req.authUserObjFromToken; //from verifyToken

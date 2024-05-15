@@ -1,6 +1,6 @@
 /**
- * @fileoverview modify_delete.js
- * This route contains all routing methods related to modify/delete operations.
+ * @fileoverview deleteItem.js
+ * This route contains all routing methods related to delete homework/disciplinary report operations.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */
@@ -21,6 +21,40 @@ const verifyToken = require('../middleware/verifyToken');
 const deletetools = require('../middleware/validateItemToDelete');
 
 /******** Function Section  ****************************************************/
+
+/**
+ * @openapi
+ * '/deleteItem':
+ *  delete:
+ *     tags:
+ *     - Teacher routes
+ *     summary: Delete existing homework or report.
+ *     description: Delete an existing homework or disciplinary report, along with all its references in the database. Homeworks can also have attachment, in that case, deleting the item also deletes the file from the configured cloud service. This operation requires a valid access token.
+ *     parameters:
+ *       - in: query
+ *         name: itemId
+ *         schema: 
+ *         type: string
+ *         description: the ID of the disciplinary report or homework to be deleted.
+ *       - in: query
+ *         name: itemType
+ *         description: the type of item to be modified. Can be "homework" or "disciplinaryFile".        
+ *         schema: 
+ *          type: string         
+ *          enum: [homework, disciplinaryFile]
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *      200:
+ *        description: Updated successfully. The updated item is returned in the payload of the response
+ *      400:
+ *         description: Provided input parameters are not correct. 
+ *      401:
+ *        description: Access token is expired, or the current user is not authorized to access this route.
+ *      500:
+ *        description: Server Error
+ *                 
+ */
 
 router.delete('/deleteItem', verifyToken, deletetools.validateItemToDelete, async (req, res) => {
 

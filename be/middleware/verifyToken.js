@@ -11,7 +11,7 @@ const tools = require('../utils/utils');
 const info = require('../utils/info');
 
 
-/********************************** Function section *************************************************/
+/********************************** Variables section *************************************************/
 let permissionTable = {};
  
 permissionTable[info.TEACHER_CATEGORY_ID] = {
@@ -77,6 +77,20 @@ permissionTable[info.ADMIN_CATEGORY_ID] = {
     'addSubjectToTeacher' : true
 };
 
+/********************************** Functions section *************************************************/
+
+
+/**
+ * verifyToken
+ * This middleware controls the incoming request and the associated authorization token.
+ * By inspecting the request and the associated token, the middleware checks if the token is present, is valid, and if it
+ * is expired. It also inspects the user info contained in the token and checks if the user is allowed to access to the destination route,
+ * based on a role-specific permission table that defines which routes are accessible by which category of user.
+ * @param {*} req the incoming request. Contains the user body to be validated.
+ * @param {*} res the outgoing response. Sent as 401 - UNAUTHORIZED in case any step of the authorization procedure fails.
+ * @param {*} next allows to advance to the next middleware, but only if no error occurred before.
+ * If advancing, the request object will contain the decoded user token along with the user object as retrieved from the db.
+ */
 const verifyToken = async (req, res, next) => {
 
     let tokenHeader = req.headers['authorization'];
@@ -89,7 +103,6 @@ const verifyToken = async (req, res, next) => {
             let decodedToken = jwt.decode(token);
 
             if(Math.floor(new Date().getTime()/1000) >= decodedToken.exp){
-                console.log(Date.now())
                 expiredToken = true;
                 throw new Error ('Access token is expired. You will be redirected to login.')
             } else {

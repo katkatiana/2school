@@ -25,8 +25,9 @@ const info = require('../utils/info');
  * '/getClasses/:userId':
  *  get:
  *     tags:
- *     - Get User classrooms IDs
+ *     - Generic User routes
  *     summary: Retrieve all the classroom IDs of the classes that are associated to a given user, specified by userId.
+ *     description: Retrieves all the classes associated to a given user, either it be a student or a teacher. In case the endpoint is called by an admin, the class object with all students and teachers is returned. If it is called by a student or a teacher, only the classes in which the user belong are returned. This operation requires a valid access token.
  *     parameters:
  *       - in: path
  *         name: userId
@@ -38,9 +39,9 @@ const info = require('../utils/info');
  *      - bearerAuth: []
  *     responses:
  *      200:
- *        description: Fetched Successfully. Returns an array with the IDs of the associated Classes.
+ *        description: Fetched Successfully. Returns an array with the IDs of the associated classrooms.
  *      401:
- *        description: Authorization was not successful.
+ *        description: Access token is expired, or the current user is not authorized to access this route.
  *      500:
  *        description: Internal Server Error.
  */
@@ -108,8 +109,9 @@ router.get('/getClasses/:userId', verifyToken, async (req, res) => {
  * '/getClass/:classId':
  *  get:
  *     tags:
- *     - Get details of a given classroom
- *     summary: Retrieve all the details of a classroom with the given classID. You can view the classroom details only if you are part of it (either as a student or as a teacher).
+ *     - Generic User routes
+ *     summary: Retrieve all the details of a given classroom.
+ *     description: Retrieve the entire details of a given classroom, specified by classId. You can view the classroom details only if you are part of it (either as a student or as a teacher). This operation requires a valid access token.
  *     parameters:
  *       - in: path
  *         name: classId
@@ -123,7 +125,7 @@ router.get('/getClasses/:userId', verifyToken, async (req, res) => {
  *      200:
  *        description: Fetched Successfully. Returns a fully-qualified Class Object with all the references already resolved.
  *      401:
- *        description: Authorization was not successful.
+ *        description: Access token is expired, or the current user is not authorized to access this route.
  *      404:
  *        description: Specified classroom was not found in the database.
  *      500:

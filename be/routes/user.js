@@ -1,6 +1,6 @@
 /**
  * @fileoverview user.js
- * This route contains all routing methods related to all users to see and modify their info.
+ * This route contains all routing methods related to generic user management.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */
@@ -22,14 +22,14 @@ const usertools = require('../middleware/validateUserRoute');
 
 /******** Function Section  ****************************************************/
 
-/** GET Methods */
 /**
  * @openapi
- * '/getUser/{userId}':
+ * '/getUser/:userId':
  *  get:
  *     tags:
- *     - Get User Information
+ *     - Generic User routes
  *     summary: Get user information from the given user ID
+ *     description: Retrieves information about the user given by the provided user ID. A given user cannot view the information of another user, but only its personal ones. This operation requires a valid access token.
  *     parameters:
  *       - in: path
  *         name: userId
@@ -41,7 +41,7 @@ const usertools = require('../middleware/validateUserRoute');
  *      - bearerAuth: []
  *     responses:
  *      200:
- *        description: Fetched Successfully
+ *        description: Fetched successfully.
  *      500:
  *        description: Server Error
  */
@@ -70,14 +70,14 @@ router.get('/getUser/:userId', verifyToken, async (req, res) => {
     }
 });
 
-/** PATCH Methods */
 /**
  * @openapi
- * '/modifyUser/{userId}':
+ * '/modifyUser/:userId':
  *  patch:
  *     tags:
- *     - Modify User avatar or password
- *     summary: Modify user avatar or password 
+ *     - Generic User routes
+ *     summary: Modify user informations.
+ *     description: Modify user information. Teacher/student users can only modify password and/or avatar, while admins can modify all the characteristics. Since the access token also stores the avatar URL, when any modification to the avatar is requested a new access token is generated and returned in the response headers.
  *     parameters:
  *       - in: path
  *         name: userId
@@ -85,40 +85,41 @@ router.get('/getUser/:userId', verifyToken, async (req, res) => {
  *         type: string
  *         required: true
  *         description: Alphanumeric ID of the user to modify
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            oneOf:
- *              - "$ref": '#/components/schemas/Avatar'
- *              - "$ref": '#/components/schemas/Password'
+ *       - in: body
+ *         name: body
+ *         description: The parameters to modify.
+ *         schema:
+ *           type: object
+ *           properties:
+ *             avatar:
+ *               type: string
+ *               description: URL of the new avatar (optional)
+ *               example: http://myavatar.jpg
+ *             password:
+ *               type: string
+ *               description: New password (optional)
+ *               example: 12345678
+ *             firstName:
+ *               type: string
+ *               description: New first name of the user (optional, editable only by admin)
+ *               example: Johnny
+ *             lastName:
+ *               type: string
+ *               description: New last name of the user (optional, editable only by admin)
+ *               example: Smith
+ *             email:
+ *               type: string
+ *               description: New email of the user (optional, editable only by admin)
+ *               example: newemail@email.com
  *     security:
  *      - bearerAuth: []
  *     responses:
  *      200:
  *        description: Updated successfully
+ *      400:
+ *         description: Provided input parameters are not correct.
  *      500:
  *        description: Server Error
- * 
- * components:
- *   schemas:
- *     Avatar:
- *       type: object
- *       properties: 
- *         avatar: 
- *           type: string
- *           default: https://your-url.com
- *       required:
- *         - avatar
- *     Password:
- *       type: object
- *       properties: 
- *         password: 
- *           type: string
- *           default: your-new-password
- *       required:
- *         - password
  *                 
  */
 router.patch('/modifyUser/:userId', verifyToken, usertools.validateUserToModify, async (req, res) => {

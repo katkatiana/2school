@@ -25,24 +25,23 @@ const info = require('../utils/info');
  * '/login':
  *  post:
  *     tags:
- *     - User Login
+ *     - Generic User routes
  *     summary: Performs login of the given user
- *     requestBody:
- *      required: true
- *      content:
- *        application/json:
- *           schema:
- *            type: object
- *            required:
- *              - email
- *              - password
- *            properties:
- *              email:
- *                type: string
- *                default: johndoe@scuola.edu.it
- *              password:
- *                type: string
- *                default: johnDoe20
+ *     description: On successful login, a new access token is returned in the response headers ("Authorization"). This token must be used and attached to every request made to the server, since it is used to authenticate the current user.
+ *     parameters:
+ *       - in: body
+ *         name: body
+ *         description: Email and password to be used for login.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - email
+ *             - password
+ *           properties:
+ *             email:
+ *               type: string
+ *             password:
+ *               type: string
  *     responses:
  *      200:
  *        description: Login successful

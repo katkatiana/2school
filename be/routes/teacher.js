@@ -17,7 +17,32 @@ const tools = require('../utils/utils');
 const info = require('../utils/info');
 
 /******** Function Section  ****************************************************/
-
+/** GET Methods */
+/**
+ * @openapi
+ * '/getSubjects/:teacherId':
+ *  get:
+ *     tags:
+ *     - Generic User routes
+ *     summary: Retrieves all the subjects that are currently associated to the teacher whose id is given as input parameter. 
+ *     description: If the current requesting user (from access token) is a teacher, only its associated subjects are retrieved. If it's an admin, all the existing subjects in the database are returned. This operation requires a valid access token.
+ *     parameters:
+ *       - in: path
+ *         name: teacherId
+ *         schema:
+ *         type: string
+ *         required: true
+ *         description: Alphanumeric ID of the teacher whose subjects are to be retrieved.
+ *     security:
+ *      - bearerAuth: []
+ *     responses:
+ *      200:
+ *        description: Fetched successfully. The returned subjects are contained in the payload of the response.
+ *      401:
+ *        description: Access token is expired, or the current user is not authorized to access this route.
+ *      404:
+ *        description: The specified teacher Id does not correspond to a known teacher.
+ */
 router.get('/getSubjects/:teacherId', verifyToken, async (req, res) => {
     const { teacherId } = req.params;
     const userFromToken = req.authUserObjFromToken;

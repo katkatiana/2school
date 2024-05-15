@@ -1,6 +1,6 @@
 /**
  * @fileoverview validateItemToModify.js
- * This middleware is responsible of validating the the HTTP request needed to modify data.
+ * This middleware is responsible of validating the the HTTP request needed to modify homework or report.
  * @author Mariakatia Santangelo
  * @date   15-04-2024
  */
@@ -37,7 +37,7 @@ cloudinary.config(
 
 /**
  * validateItemToModify
- * This middleware controls every param of the body object contained in the homework add request, 
+ * This middleware controls every param of the body object contained in the homework/report modification request, 
  * and allows to specify what kind of characteristics they need to have in order to advance the request to 
  * the next middleware.
  * Occurred errors, if any, are sent as an array in the response.
