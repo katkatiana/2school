@@ -62,7 +62,7 @@ const AdminPanel = () => {
                 <Button 
                     type = 'button'
                     onClick = {e => navigate("/modifyDeleteUser")}
-                > Modify/Delete User </Button>
+                > Delete User </Button>
             </Tooltip>
             <Tooltip title="Create a new subject.">
                 <Button 

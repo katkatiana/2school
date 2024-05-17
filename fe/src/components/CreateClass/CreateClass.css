@@ -2,9 +2,17 @@
     height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
 
 .button-create-class{
     width: 15%;
+}
+
+.column-center-main-create-class{
+    width: 80%;
+}
+
+.try{
+    display: flex;
+    justify-content: center;
 }

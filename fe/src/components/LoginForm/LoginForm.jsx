@@ -83,7 +83,7 @@ const LoginForm = () => {
     }
 
     return(
-        <>
+        <div className='entire-login-form'>
             <div className="login-container">
                 <h2 className = 'first-title'>Electronic LogBook</h2>
                 <h2 className = 'second-title'>Login 2school</h2>
@@ -122,7 +122,7 @@ const LoginForm = () => {
                     </div>
                 </form>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -182,7 +182,7 @@ const clearForm = () => {
             <Navbar />
             <div className="signup-form">
                 <h2>User Sign Up</h2>
-                <form onSubmit = {handleOnSubmit} className = 'entire-form'>
+                <form /* onSubmit = {handleOnSubmit} */ className = 'entire-form'>
                     <div className="form-group first-form-group">
                         <input 
                             type = "string" 
@@ -239,7 +239,7 @@ const clearForm = () => {
                         </select>                        
                     </div>
                     <div className = 'form-button'>
-                        <Button type="submit">Sign Up</Button>
+                        <Button type="primary" onClick={handleOnSubmit}>Sign Up</Button>
                     </div>
                 </form>
             </div>

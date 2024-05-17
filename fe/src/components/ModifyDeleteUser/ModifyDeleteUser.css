@@ -9,22 +9,12 @@
     height: 100vh;
 }
 
-.modify-user-btn{
-    background-color: rgb(255, 223, 12);
-    color: white;
-    display: flex;
-    align-items: center;
-}
-
-.modify-user-btn:hover{
-    background-color: yellow;
-}
-
 .delete-user-btn{
     background-color: rgb(255, 77, 0);
     color: white;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .delete-user-btn:hover{

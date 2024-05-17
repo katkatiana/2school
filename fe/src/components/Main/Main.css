@@ -1,4 +1,4 @@
-.container{
+.container-main{
     display: flex;
     width: 100%;
     gap: 5%;
@@ -25,6 +25,11 @@
 .column-right-main{
     margin-block-start: 2%;
     height: fit-content;
+    margin-inline-end: 3%;
+}
+
+.column-left-main{
+    margin-inline-start: 3%;
 }
 
 .sub-icon {
@@ -33,6 +38,10 @@
 
 @media screen and (max-width: 768px) {
 
+    .container-main{
+        flex-direction: column;
+    }
+
     .column-center-main{
         margin-inline-start: 40px!important;
     }
@@ -40,5 +49,16 @@
     .column-right-main {
         display: none!important;
     }
+
+    .column-left-main{
+        max-width: 100%;
+        margin-inline-start: 0;
+    }
+
+    .sub-list{
+        width: 80%;
+        margin-inline-start: 30px;
+    }
+
 
 }

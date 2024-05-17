@@ -169,8 +169,7 @@ const CreateClass = () => {
 
     return (
         <div className = 'create-class-container'>
-
-                <div className='column-center-main'>
+            <div className='column-center-main'>
                 <Tooltip title="To create a new classroom, click the button and insert the needed information.">
                     <Button shape="circle" icon={<InfoOutlined />} className='info-disciplinary'/>
                 </Tooltip>
@@ -197,13 +196,15 @@ const CreateClass = () => {
                     )}
                     />
                 </div>
-                <Button 
-                    type = 'primary'
-                    onClick = {handleCreateNewClass}
-                    className = 'button-create-class'
-                > 
-                    Create New Class 
-                </Button>
+                <div className='try'>
+                    <Button 
+                        type = 'primary'
+                        onClick = {handleCreateNewClass}
+                        className = 'button-create-class'
+                    > 
+                        Create New Class 
+                    </Button>
+                </div>
                 <Modal 
                     title="Create Class" 
                     open={isClassModalOpen} 

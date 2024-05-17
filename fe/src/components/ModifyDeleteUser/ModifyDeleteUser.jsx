@@ -151,13 +151,9 @@ const ModifyDeleteUser = () => {
                 />
           </div>
           <div className='modify-delete-user-buttons'>
-            <Button type = 'button' onClick={deleteSelectedUser} className = 'modify-user-btn'>
+            <Button type = 'button' onClick={deleteSelectedUser} className = 'delete-user-btn'>
               <DeleteOutlined />
                 Delete
-            </Button>
-            <Button type = 'button' disabled className = 'delete-user-btn'>
-              <EditOutlined />
-                Modify
             </Button>
           </div>
         </div>

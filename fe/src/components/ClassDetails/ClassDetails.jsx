@@ -511,6 +511,7 @@ const ClassDetails = () => {
         <>
           <div className='container-class-details'>
             <div className='column-center-detailed'>
+              <h4 className = 'class-title'>📚Classroom Details</h4>
               <Table
                   {...tableProps}
                   columns={tableColumns}
@@ -574,8 +575,8 @@ const ClassDetails = () => {
                                     className = 'homework-list'
                                     dataSource={homeworkData}
                                     renderItem={(item) => (
-                                      <List.Item>
-                                        <Card title={item.title}>
+                                      <List.Item className='card-width'>
+                                        <Card /* className='homework-card' */ title={item.title} style = {{height: '280px', width: '100%'}}>
                                           <p>Author: {item.teacher}</p>                                         
                                           <p>{item.content}</p>
                                           {
@@ -597,6 +598,7 @@ const ClassDetails = () => {
                                                               style={{
                                                                 width: 120,
                                                               }}
+                                                              className = 'input-sub'
                                                               options={listOfSubjects}
                                                               value={currentSelectedSubject}
                                                             />

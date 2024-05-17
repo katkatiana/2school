@@ -121,32 +121,33 @@ const Main = () => {
 
     return (
         <>
-            <div className = 'container'>
+            <div className = 'container-main'>
                 { currentUserCategory === TEACHER_CATEGORY_ID ?
                   <div className='column-left-main'>
-                  <Divider orientation="left" className='column-left-main-title'>📖 Your Subjects</Divider>
-                  <List
-                    size="small"
-                    bordered
-                    dataSource={listOfSubjects}
-                    renderItem={(item) => <List.Item>{item.name}</List.Item>}
-                  />
-                  </div>
-                  : 
-                  <div className='column-left-main'>
-                  <Divider orientation="left" className='column-left-main-title'>🧑🏻‍🏫 Your Teachers</Divider>
-                  <List
-                    size="small"
-                    bordered
-                    dataSource={listOfTeachers}
-                    renderItem={(item) => 
-                      <List.Item>
-                        <UserOutlined className='sub-icon' />
-                        <p>{item.teacherName}</p>
-                        <p>{item.subjectString}</p>
-                      </List.Item>
-                    }
-                  />
+                    <Divider orientation="left" className='column-left-main-title'>📖 Your Subjects</Divider>
+                    <List
+                      size="small"
+                      className = 'sub-list'
+                      bordered
+                      dataSource={listOfSubjects}
+                      renderItem={(item) => <List.Item>{item.name}</List.Item>}
+                    />
+                    </div>
+                    : 
+                    <div className='column-left-main'>
+                    <Divider orientation="left" className='column-left-main-title'>🧑🏻‍🏫 Your Teachers</Divider>
+                    <List
+                      size="small"
+                      bordered
+                      dataSource={listOfTeachers}
+                      renderItem={(item) => 
+                        <List.Item>
+                          <UserOutlined className='sub-icon' />
+                          <p>{item.teacherName}</p>
+                          <p>{item.subjectString}</p>
+                        </List.Item>
+                      }
+                    />
                   </div>
                 }
                 <div className='column-center-main'>

@@ -250,7 +250,7 @@ const UserInfo = () => {
                         </div>
                         <div className="info-item">
                             <label htmlFor="email" id='email'>📧Email:</label>
-                            <span id="email">{currentUser.email}</span>
+                            <span id="email" className = 'email-user-info'>{currentUser.email}</span>
                         </div>
                         <div className = 'button-pswd'>
                             <button 

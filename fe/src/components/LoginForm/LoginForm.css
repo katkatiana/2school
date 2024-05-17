@@ -4,6 +4,10 @@ body {
     background-color: #f0f0f0;
 }
 
+.entire-login-form{
+    height: 100vh;
+}
+
 .login-container {
     width: 50%;
     margin: 6% auto;
@@ -16,6 +20,7 @@ body {
 .login-form{
     display: flex;
     flex-direction: column;
+    height: fit-content;
 }
 
 h2 {

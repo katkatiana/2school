@@ -107,12 +107,57 @@
     margin-block: 10px!important;
 }
 
+.class-title{
+    margin-inline: 20px;
+}
+
+/* .ant-card.ant-card-bordered{
+    height: 300px!important;
+} */
+
 @media screen and (max-width: 768px) {
 
     .homework-button,
     .disciplinary-button{
-        margin-inline-end: 50px;
         width: 60%;
     }
+    .container-class-details{
+        flex-direction: column;
+        gap: 50px;
+    }
 
+    .column-center-detailed{
+        width: 100%;
+    }
+
+    .ant-table-content{
+        width: 100%!important;
+    }
+
+    .column-right-detailed{
+        width: 100%;
+        margin-inline-start: 10px;
+    }
+/* 
+    .card-width{
+        width: 100%!important;
+    } */
+
+/*     .homework-card{
+        width: 100%!important;
+        min-width: 100%!important;
+    } */
+
+    .disciplinary-section-detailed{
+        margin-inline-start: 0;
+    }
+
+    .ant-modal-body{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .ant-select-single{
+        width: 140px!important;
+    }
 }
